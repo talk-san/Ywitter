@@ -1,6 +1,7 @@
 package com.talxan.securitylearn.post;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.talxan.securitylearn.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,7 @@ public class Post {
     private Date postedAt;
 
     @ManyToOne
+    @JsonIgnore
     private User postUser;
 
 }
