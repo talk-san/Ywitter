@@ -2,15 +2,10 @@ package com.talxan.securitylearn.post;
 
 import com.talxan.securitylearn.exceptions.PostNotFoundException;
 import com.talxan.securitylearn.user.User;
-import com.talxan.securitylearn.user.UserRepository;
 import com.talxan.securitylearn.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,10 +28,15 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
-        return PostResponse.builder()
-                .contents(post.getContent())
-                .username(postUser.getUsername())
-                .build();
+        return mapToPostResponse(post);
+    }
+
+    @Transactional
+    public PostResponse updatePost(Integer id, PostRequest request) {
+        Post updatedPost = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        updatedPost.setContent(request.getContent());
+        postRepository.save(updatedPost);
+        return mapToPostResponse(updatedPost);
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class PostService {
         return userService.getCurrentUser().getPosts().stream().map(this::mapToPostResponse).collect(Collectors.toList());
     }
 
-    private PostResponse  mapToPostResponse(Post post) {
+    private PostResponse mapToPostResponse(Post post) {
         User postUser = userService.getCurrentUser();
         return PostResponse.builder()
                 .contents(post.getContent())
@@ -59,6 +59,5 @@ public class PostService {
                 .postedAt(post.getPostedAt())
                 .build();
     }
-
 
 }

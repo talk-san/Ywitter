@@ -1,15 +1,19 @@
 package com.talxan.securitylearn.user;
 
+import com.talxan.securitylearn.exceptions.UserNotFoundException;
 import com.talxan.securitylearn.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -25,6 +29,13 @@ public class UserService {
 
     public User getCurrentUser() {
         return (com.talxan.securitylearn.user.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public ResponseEntity<String> followUser(Integer id) {
+        User toFollow = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User currUser = getCurrentUser();
+        currUser.getFollowing().add(toFollow);
+        return ResponseEntity.ok().body(currUser.getFirstName() + " followed user " + toFollow.getFirstName());
     }
 
     public String uploadPhoto(Integer id, MultipartFile file) {
@@ -51,4 +62,9 @@ public class UserService {
             throw new RuntimeException("Unable to save image");
         }
     };
+
+
+    public List<UserResponse> getFollowing() {
+        return null;
+    }
 }

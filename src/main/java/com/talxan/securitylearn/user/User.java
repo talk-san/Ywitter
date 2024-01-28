@@ -4,7 +4,6 @@ import com.talxan.securitylearn.post.Post;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -30,7 +29,13 @@ public class User implements UserDetails {
     private String photoUrl;
 
     @OneToMany(mappedBy = "postUser", fetch = FetchType.EAGER)
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "relation",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private List<User> following;
 
     @Enumerated
     private Role role;

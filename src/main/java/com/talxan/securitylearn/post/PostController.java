@@ -18,6 +18,11 @@ public class PostController {
         return ResponseEntity.ok(postService.createPost(request));
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Integer id, @RequestBody PostRequest request) {
+        return ResponseEntity.ok(postService.updatePost(id, request));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePostById(@PathVariable Integer id) {
         postService.deletePostById(id);

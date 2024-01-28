@@ -29,8 +29,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<String> getUserByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(repository.findByEmail(email).get().getEmail());
-    }
 }
