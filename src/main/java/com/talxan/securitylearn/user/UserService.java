@@ -1,23 +1,21 @@
 package com.talxan.securitylearn.user;
 
 import com.talxan.securitylearn.exceptions.UserNotFoundException;
-import com.talxan.securitylearn.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.talxan.securitylearn.constants.Constant.PHOTO_DIRECTORY;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -27,15 +25,25 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User getCurrentUser() {
-        return (com.talxan.securitylearn.user.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
+    @Transactional
     public ResponseEntity<String> followUser(Integer id) {
         User toFollow = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         User currUser = getCurrentUser();
         currUser.getFollowing().add(toFollow);
+        update(currUser);
         return ResponseEntity.ok().body(currUser.getFirstName() + " followed user " + toFollow.getFirstName());
+    }
+
+    @Transactional
+    public List<UserResponse> getFollowing() {
+        User currUser = getCurrentUser();
+        return currUser.getFollowing().stream().map(this::mapToUserResponse).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<UserResponse> getFollowers() {
+        User currUser = getCurrentUser();
+        return currUser.getFollowing().stream().map(this::mapToUserResponse).collect(Collectors.toList());
     }
 
     public String uploadPhoto(Integer id, MultipartFile file) {
@@ -45,6 +53,14 @@ public class UserService {
         user.setPhotoUrl(photoUrl);
         userRepository.save(user);
         return photoUrl;
+    }
+
+    public User update(User user) {
+        if(!userRepository.existsById(user.getUserId()))
+            throw new UserNotFoundException(user.getUserId() +" is not found.");
+
+        userRepository.save(user);
+        return user;
     }
 
     private final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
@@ -63,8 +79,15 @@ public class UserService {
         }
     };
 
+    public User getCurrentUser() {
+        return (com.talxan.securitylearn.user.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
-    public List<UserResponse> getFollowing() {
-        return null;
+    public UserResponse mapToUserResponse(User user) {
+        return UserResponse.builder()
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .id(user.getUserId())
+                .build();
     }
 }

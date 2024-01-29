@@ -20,7 +20,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Integer userId;
 
     private String firstName;
     private String lastName;
@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private List<Post> posts;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "relation",
+    @JoinTable(name = "following",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "following_id"))
     private List<User> following;
