@@ -1,5 +1,8 @@
-package com.talxan.securitylearn.demo;
+package com.talxan.securitylearn.admin;
 
+import com.talxan.securitylearn.user.UserResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,15 +11,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequiredArgsConstructor
 public class AdminController {
 
-    @GetMapping("/get")
+    private final AdminService adminService;
+
+    @GetMapping("/getAllUsers")
     @PreAuthorize("hasAuthority('admin:read')")
-    public String get() {
-        return "GET:: admin controller";
+    public ResponseEntity<List<UserResponse>> getAllUsers () {
+        List<UserResponse> users = adminService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/post")

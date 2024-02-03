@@ -1,6 +1,7 @@
 package com.talxan.securitylearn.user;
 
 import com.talxan.securitylearn.exceptions.UserNotFoundException;
+import com.talxan.securitylearn.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,13 +38,13 @@ public class UserService {
     @Transactional
     public List<UserResponse> getFollowing() {
         User currUser = getCurrentUser();
-        return currUser.getFollowing().stream().map(this::mapToUserResponse).collect(Collectors.toList());
+        return currUser.getFollowing().stream().map(UserMapper::toUserResponse).collect(Collectors.toList());
     }
 
     @Transactional
     public List<UserResponse> getFollowers() {
         User currUser = getCurrentUser();
-        return currUser.getFollowing().stream().map(this::mapToUserResponse).collect(Collectors.toList());
+        return userRepository.findFollowersByUserId(currUser.getUserId()).stream().map(UserMapper::toUserResponse).collect(Collectors.toList());
     }
 
     public String uploadPhoto(Integer id, MultipartFile file) {
@@ -83,11 +84,5 @@ public class UserService {
         return (com.talxan.securitylearn.user.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public UserResponse mapToUserResponse(User user) {
-        return UserResponse.builder()
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .id(user.getUserId())
-                .build();
-    }
+
 }

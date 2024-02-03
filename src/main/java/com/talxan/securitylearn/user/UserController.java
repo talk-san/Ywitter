@@ -2,6 +2,7 @@ package com.talxan.securitylearn.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,4 +30,11 @@ public class UserController {
         List<UserResponse> following = userService.getFollowing();
         return ResponseEntity.ok(following);
     }
+
+    @GetMapping("/getFollowers")
+    public ResponseEntity<List<UserResponse>> getFollowers() {
+        List<UserResponse> followers = userService.getFollowers();
+        return ResponseEntity.ok(followers);
+    }
+
 }
