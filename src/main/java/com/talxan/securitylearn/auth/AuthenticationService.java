@@ -1,6 +1,7 @@
 package com.talxan.securitylearn.auth;
 
 import com.talxan.securitylearn.config.JwtService;
+import com.talxan.securitylearn.exceptions.UserNotFoundException;
 import com.talxan.securitylearn.user.Role;
 import com.talxan.securitylearn.user.User;
 import com.talxan.securitylearn.user.UserRepository;
@@ -36,12 +37,14 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
+
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UserNotFoundException("User with email " + email + " is not found!"));
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         email,
                         password)
         );
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

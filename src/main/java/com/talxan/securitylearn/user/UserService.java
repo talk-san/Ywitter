@@ -1,5 +1,6 @@
 package com.talxan.securitylearn.user;
 
+import com.talxan.securitylearn.exceptions.SelfFollowException;
 import com.talxan.securitylearn.exceptions.UserNotFoundException;
 import com.talxan.securitylearn.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -30,6 +32,11 @@ public class UserService {
     public ResponseEntity<String> followUser(Integer id) {
         User toFollow = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         User currUser = getCurrentUser();
+
+        if (Objects.equals(toFollow.getUserId(), currUser.getUserId())) {
+            throw new SelfFollowException("You cannot follow yourself!");
+        }
+
         currUser.getFollowing().add(toFollow);
         update(currUser);
         return ResponseEntity.ok().body(currUser.getFirstName() + " followed user " + toFollow.getFirstName());

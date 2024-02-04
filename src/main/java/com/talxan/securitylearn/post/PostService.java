@@ -1,6 +1,7 @@
 package com.talxan.securitylearn.post;
 
 import com.talxan.securitylearn.exceptions.PostNotFoundException;
+import com.talxan.securitylearn.mappers.PostMapper;
 import com.talxan.securitylearn.user.User;
 import com.talxan.securitylearn.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.talxan.securitylearn.mappers.PostMapper.mapToPostResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -19,14 +22,11 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(PostRequest request) {
-        User postUser = userService.getCurrentUser();
-
         var post = Post.builder()
                 .content(request.getContent())
                 .postUser(userService.getCurrentUser())
                 .postedAt(new Date())
                 .build();
-
         postRepository.save(post);
         return mapToPostResponse(post);
     }
@@ -47,17 +47,16 @@ public class PostService {
 
     @Transactional
     public List<PostResponse> getAllPosts() {
-        return userService.getCurrentUser().getPosts().stream().map(this::mapToPostResponse).collect(Collectors.toList());
+        User currentUser = userService.getCurrentUser();
+        return currentUser.getPosts().stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
     }
 
-    private PostResponse mapToPostResponse(Post post) {
-        User postUser = userService.getCurrentUser();
-        return PostResponse.builder()
-                .contents(post.getContent())
-                .username(postUser.getUsername())
-                .firstName(postUser.getFirstName())
-                .postedAt(post.getPostedAt())
-                .build();
+    public List<PostResponse> getFeed() {
+        List<Integer> ids = userService.getCurrentUser().getFollowing().stream().map(User::getUserId).toList();
+        return postRepository.findFirst10ByPostUser_UserIdInOrderByPostedAtDesc(ids).stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
+
     }
+
+
 
 }

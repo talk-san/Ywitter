@@ -30,8 +30,14 @@ public class PostController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PostResponse>> getAllPostsController() {
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
         List<PostResponse> posts = postService.getAllPosts();
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<List<PostResponse>> getFeed() {
+        List<PostResponse> posts = postService.getFeed();
         return ResponseEntity.ok(posts);
     }
 }
