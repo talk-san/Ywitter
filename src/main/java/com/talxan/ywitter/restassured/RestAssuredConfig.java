@@ -1,9 +1,8 @@
-package com.talxan.ywitter.RestAssured;
+package com.talxan.ywitter.restassured;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import jdk.jshell.execution.Util;
 
 import java.io.IOException;
 

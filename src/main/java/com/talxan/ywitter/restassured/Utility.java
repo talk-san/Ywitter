@@ -1,6 +1,4 @@
-package com.talxan.ywitter.RestAssured;
-
-import java.util.Optional;
+package com.talxan.ywitter.restassured;
 
 public class Utility {
     public static final String BASE_URI = "http://localhost:8080";
