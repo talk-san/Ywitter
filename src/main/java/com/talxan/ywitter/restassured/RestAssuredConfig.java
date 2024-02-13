@@ -9,6 +9,8 @@ import java.io.IOException;
 import static io.restassured.http.ContentType.JSON;
 
 public class RestAssuredConfig {
+
+    //test
     public static Response registerUser(String s) throws IOException {
 
         return RestAssured.given()
