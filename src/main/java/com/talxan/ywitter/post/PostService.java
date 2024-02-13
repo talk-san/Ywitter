@@ -5,10 +5,12 @@ import com.talxan.ywitter.mappers.PostMapper;
 import com.talxan.ywitter.yuser.User;
 import com.talxan.ywitter.yuser.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.talxan.ywitter.mappers.PostMapper.mapToPostResponse;
@@ -40,9 +42,14 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePostById(Integer id) {
+    public ResponseEntity<String> deletePostById(Integer id) {
         Post postToDelete = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        // Check if post belongs to user;
+        if (!Objects.equals(postToDelete.getPostYuser().getYuserId(), userService.getCurrentUser().getYuserId())) {
+            throw new IllegalStateException("Post does not belong to user");
+        }
         postRepository.delete(postToDelete);
+        return ResponseEntity.ok("Post with id " + id +" successfully deleted");
     }
 
     @Transactional
