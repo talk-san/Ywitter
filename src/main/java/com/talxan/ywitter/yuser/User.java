@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String photoUrl;
+    private Boolean active;
 
     @OneToMany(mappedBy = "postYuser", fetch = FetchType.EAGER)
     private List<Post> posts;

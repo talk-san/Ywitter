@@ -25,7 +25,7 @@ public class AuthenticationService {
         String email = request.getEmail();
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if (userOptional.isEmpty()) {
+        if (userOptional.isPresent()) {
             throw new EmailAlreadyTakenException(email);
         }
 
@@ -35,6 +35,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
+                .active(true)
                 .build();
 
         userRepository.save(user);
