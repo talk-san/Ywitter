@@ -16,6 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -23,11 +24,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         String email = request.getEmail();
-        Optional<User> userOptional = userRepository.findByEmail(email);
-
-        if (userOptional.isPresent()) {
-            throw new EmailAlreadyTakenException(email);
-        }
+        userRepository.findByEmail(email).ifPresent(user -> {throw new EmailAlreadyTakenException(email);});
 
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -56,6 +53,7 @@ public class AuthenticationService {
                         email,
                         password)
         );
+
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
