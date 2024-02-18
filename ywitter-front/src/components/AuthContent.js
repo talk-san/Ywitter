@@ -5,7 +5,7 @@ import {request} from '../axios_helper';
 export default class AuthContent extends React.Component {
     constructor(props) {
         super(props);
-        this.sate = {
+        this.state = {
             data : []
         };
     };
@@ -13,18 +13,21 @@ export default class AuthContent extends React.Component {
     componentDidMount() {
         request(
             "GET",
-            "/messages",
+            "api/v1/open/messages",
             {}
         ).then((response) => {
             this.setState({data : response.data})
         });
     };
 
-    render () {
+    render() {
         return (
             <div>
-                {this.state.data && this.state.data.map((line) => <p>{line}</p>)}
+                {this.state.data && this.state.data.map((line, index) => (
+                    <p key={index}>{line}</p>
+                ))}
             </div>
         );
-    };
+    }
+    
 }
