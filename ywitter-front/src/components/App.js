@@ -9,10 +9,10 @@ function App() {
         <div>
             <Header pageTitle="Ywitter sample" logoSrc = {logo} />
             <div className="container-fluid">
-                <div classname="row">
-                    <div classname="col">
-                <AppContent/>
-                </div>
+                <div className="row">
+                    <div className="col">
+                        <AppContent/>
+                    </div>
                 </div>
             </div>
             
