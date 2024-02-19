@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "IN (SELECT f.yuser_id FROM yuser u INNER join following f ON u.yuser_id = f.following_id WHERE f.following_id = :yuserId)", nativeQuery = true)
     List<User> findFollowersByYuserId(Integer yuserId);
 
+    Optional<User> findByVerificationToken(String verification_token);
 }
