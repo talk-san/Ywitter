@@ -83,7 +83,7 @@ public class AuthenticationService {
         String subject = "Click here to verify your Ywitter account";
         String content = "Dear [[name]],<br>"
                 + "Please click the link below to verify your registration: [[verifyUrl]]";
-        String verifyUrl = url + "/verify?code=" + user.getVerificationToken();
+        String verifyUrl = url + "/api/v1/auth/verify?code=" + user.getVerificationToken();
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
