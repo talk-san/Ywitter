@@ -33,11 +33,9 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request, String url) throws MessagingException, UnsupportedEncodingException {
         String email = request.getEmail();
-        Optional<User> userOptional = userRepository.findByEmail(email);
-
-        if (userOptional.isPresent()) {
-            throw new EmailAlreadyTakenException(email);
-        }
+        userRepository.findByEmail(email).ifPresent(user -> {
+            throw new EmailAlreadyTakenException();
+        });
 
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -45,13 +43,13 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .enabled(false)
+                .enabled(true)
                 .verificationToken(generateToken())
                 .build();
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        sendVerificationMail(user, url);
+        //sendVerificationMail(user, url);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)

@@ -4,6 +4,7 @@ package com.talxan.ywitter.auth;
 import com.talxan.ywitter.yuser.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.repository.query.Param;
@@ -22,7 +23,7 @@ public class AuthenticationController {
     private final UserRepository repository;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register (@RequestBody RegisterRequest request, HttpServletRequest httpServletRequest) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<AuthenticationResponse> register (@Valid @RequestBody RegisterRequest request, HttpServletRequest httpServletRequest) throws MessagingException, UnsupportedEncodingException {
         return ResponseEntity.ok(service.register(request, getURL(httpServletRequest)));
     }
 

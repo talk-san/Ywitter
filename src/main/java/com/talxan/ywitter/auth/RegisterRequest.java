@@ -9,15 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
+
 
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Validated
 public class RegisterRequest {
+
     @NotBlank(message = "First name cannot be empty")
     @Size(min=2, max=30)
     private String firstName;
@@ -29,7 +29,7 @@ public class RegisterRequest {
     @Email(message = "Invalid email format")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,}$",
             message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
     private String password;
 
