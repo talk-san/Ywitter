@@ -43,13 +43,13 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .enabled(true)
+                .enabled(false)
                 .verificationToken(generateToken())
                 .build();
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        //sendVerificationMail(user, url);
+        sendVerificationMail(user, url);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
