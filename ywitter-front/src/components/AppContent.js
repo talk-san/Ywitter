@@ -4,6 +4,7 @@ import WelcomeContent from './WelcomeContent'
 import AuthContent from "./AuthContent"
 import LoginForm from "./LoginForm"
 import Buttons from "./Buttons"
+import Tweets from "./Tweets";
 
 import {request, setAuthHeader} from '../axios_helper'
 
@@ -33,7 +34,7 @@ export default class AppContent extends React.Component {
         password: password
       }
       ).then((response) => {
-        this.setState({componentToShow: "messages"});
+        this.setState({componentToShow: "tweets"});
         setAuthHeader(response.data.token);
       }).catch((error) => {
         setAuthHeader(null);
@@ -63,11 +64,11 @@ export default class AppContent extends React.Component {
   render () {
         return (
           <div>
-            <Buttons login={this.login} logout={this.logout}
-            />
+            <Buttons login={this.login} logout={this.logout}/>
             {this.state.componentToShow === "welcome" && <WelcomeContent/>}
             {this.state.componentToShow === "messages" && <AuthContent/>}
             {this.state.componentToShow === "login" && <LoginForm onLogin={this.onLogin} onRegister={this.onRegister}/>}
+            {this.state.componentToShow === "tweets" && <Tweets/>}
       
           </div>  
         );

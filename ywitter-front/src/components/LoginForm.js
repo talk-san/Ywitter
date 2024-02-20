@@ -94,7 +94,7 @@ export default class LoginForm extends React.Component {
                                 <label className="form-label" htmlFor="registerPassword">Password</label>
                             </div>
 
-                            <button type="submit" className="btn btn-primary btn-block mb-3">Sign in</button>
+                            <button type="submit" className="btn btn-primary btn-block mb-3">Sign up</button>
                             </form>
               </div>
                 </div>
