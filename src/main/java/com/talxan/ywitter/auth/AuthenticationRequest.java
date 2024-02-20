@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class AuthenticationRequest {
 
     @Email(message = "Invalid email format")
-    //@JsonProperty("login")
     private String email;
     private String password;
 }
