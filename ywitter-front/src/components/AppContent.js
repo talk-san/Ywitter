@@ -4,8 +4,9 @@ import WelcomeContent from './WelcomeContent'
 import AuthContent from "./AuthContent"
 import LoginForm from "./LoginForm"
 import Buttons from "./Buttons"
+import Tweets from "./Tweets";
 
-import {request, setAuthHeader, setAuthToken} from '../axios_helper'
+import {request, setAuthHeader} from '../axios_helper'
 
 export default class AppContent extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ export default class AppContent extends React.Component {
 
   logout = () => {
     this.setState({componentToShow: "welcome"})
+    setAuthHeader(null);
   };
 
   onLogin = (e, email, password) => {
@@ -32,9 +34,8 @@ export default class AppContent extends React.Component {
         password: password
       }
       ).then((response) => {
-        this.setState({componentToShow: "messages"});
-        setAuthToken(response.data.token);
-        this.setState({componentToShow: "messages"})
+        this.setState({componentToShow: "tweets"});
+        setAuthHeader(response.data.token);
       }).catch((error) => {
         setAuthHeader(null);
         this.setState({componentToShow: "welcome"});
@@ -53,7 +54,7 @@ export default class AppContent extends React.Component {
       }
       ).then((response) => {
         this.setState({componentToShow: "messages"});
-        setAuthToken(response.data.token);
+        setAuthHeader(response.data.token);
       }).catch((error) => {
         this.setState({componentToShow: "welcome"});
       });
@@ -63,11 +64,11 @@ export default class AppContent extends React.Component {
   render () {
         return (
           <div>
-            <Buttons login={this.login} logout={this.logout}
-            />
+            <Buttons login={this.login} logout={this.logout}/>
             {this.state.componentToShow === "welcome" && <WelcomeContent/>}
             {this.state.componentToShow === "messages" && <AuthContent/>}
             {this.state.componentToShow === "login" && <LoginForm onLogin={this.onLogin} onRegister={this.onRegister}/>}
+            {this.state.componentToShow === "tweets" && <Tweets/>}
       
           </div>  
         );

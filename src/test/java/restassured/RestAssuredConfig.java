@@ -1,4 +1,4 @@
-package com.talxan.ywitter.restassured;
+package restassured;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -13,8 +13,8 @@ public class RestAssuredConfig {
     //test
     public static Response registerUser(String s) throws IOException {
 
-        return RestAssured.given()
-                .baseUri("http://localhost:8080/api/v1/auth/register")
+        return RestAssured.given(generateURL())
+                .baseUri("/auth/register")
                 .contentType(JSON)
                 .accept(JSON)
                 .body(s)

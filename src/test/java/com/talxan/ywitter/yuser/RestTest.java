@@ -1,6 +1,6 @@
 package com.talxan.ywitter.yuser;
 
-import com.talxan.ywitter.restassured.RestAssuredConfig;
+import restassured.RestAssuredConfig;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;

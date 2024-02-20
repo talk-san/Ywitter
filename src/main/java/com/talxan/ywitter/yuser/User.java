@@ -26,7 +26,12 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String photoUrl;
-    private Boolean active;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    @Column(name = "verification_token", length = 64)
+    private String verificationToken;
 
     @OneToMany(mappedBy = "postYuser", fetch = FetchType.EAGER)
     private List<Post> posts;
@@ -72,6 +77,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.getEnabled();
     }
 }
