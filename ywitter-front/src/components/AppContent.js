@@ -5,7 +5,7 @@ import AuthContent from "./AuthContent"
 import LoginForm from "./LoginForm"
 import Buttons from "./Buttons"
 
-import {request, setAuthHeader, setAuthToken} from '../axios_helper'
+import {request, setAuthHeader} from '../axios_helper'
 
 export default class AppContent extends React.Component {
   constructor(props) {
@@ -21,6 +21,7 @@ export default class AppContent extends React.Component {
 
   logout = () => {
     this.setState({componentToShow: "welcome"})
+    setAuthHeader(null);
   };
 
   onLogin = (e, email, password) => {
@@ -33,8 +34,7 @@ export default class AppContent extends React.Component {
       }
       ).then((response) => {
         this.setState({componentToShow: "messages"});
-        setAuthToken(response.data.token);
-        this.setState({componentToShow: "messages"})
+        setAuthHeader(response.data.token);
       }).catch((error) => {
         setAuthHeader(null);
         this.setState({componentToShow: "welcome"});
@@ -53,7 +53,7 @@ export default class AppContent extends React.Component {
       }
       ).then((response) => {
         this.setState({componentToShow: "messages"});
-        setAuthToken(response.data.token);
+        setAuthHeader(response.data.token);
       }).catch((error) => {
         this.setState({componentToShow: "welcome"});
       });
