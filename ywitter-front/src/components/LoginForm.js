@@ -9,7 +9,7 @@ export default class LoginForm extends React.Component {
           active: "login",
           firstName: "",
           lastName: "",
-          login: "",
+          email: "",
           password: "",
           onLogin: props.onLogin,
           onRegister: props.onRegister
@@ -23,7 +23,7 @@ export default class LoginForm extends React.Component {
     }
 
     onSubmitLogin = (e) => {
-        this.state.onLogin(e, this.state.login, this.state.password);
+        this.state.onLogin(e, this.state.email, this.state.password);
     };
 
     onSubmitRegister = (e) => {
@@ -31,7 +31,7 @@ export default class LoginForm extends React.Component {
             e,
             this.state.firstName,
             this.state.lastName,
-            this.state.login,
+            this.state.email,
             this.state.password
         );
     };
@@ -56,8 +56,8 @@ export default class LoginForm extends React.Component {
                             <form onSubmit={this.onSubmitLogin}>
 
                             <div className="form-outline mb-4">
-                                <input type="login" id="loginName" name= "login" className="form-control" onChange={this.onChangeHandler}/>
-                                <label className="form-label" htmlFor="loginName">Email</label>
+                                <input type="email" id="email" name= "email" className="form-control" onChange={this.onChangeHandler}/>
+                                <label className="form-label" htmlFor="email">Email</label>
                             </div>
 
                             <div className="form-outline mb-4">
@@ -72,30 +72,30 @@ export default class LoginForm extends React.Component {
                     </div>
 
                     <div className={classNames("tab-pane", "fade", this.state.active === "register" ? "show active" : "")} id="pills-register" >
-                <form onSubmit={this.onSubmitRegister}>
+                            <form onSubmit={this.onSubmitRegister}>
 
-                  <div className="form-outline mb-4">
-                    <input type="text" id="firstName" name="firstName" className="form-control" onChange={this.onChangeHandler}/>
-                    <label className="form-label" htmlFor="firstName">First name</label>
-                  </div>
+                            <div className="form-outline mb-4">
+                                <input type="text" id="firstName" name="firstName" className="form-control" onChange={this.onChangeHandler}/>
+                                <label className="form-label" htmlFor="firstName">First name</label>
+                            </div>
 
-                  <div className="form-outline mb-4">
-                    <input type="text" id="lastName" name="lastName" className="form-control" onChange={this.onChangeHandler}/>
-                    <label className="form-label" htmlFor="lastName">Last name</label>
-                  </div>
+                            <div className="form-outline mb-4">
+                                <input type="text" id="lastName" name="lastName" className="form-control" onChange={this.onChangeHandler}/>
+                                <label className="form-label" htmlFor="lastName">Last name</label>
+                            </div>
 
-                  <div className="form-outline mb-4">
-                    <input type="text" id="login" name="login" className="form-control" onChange={this.onChangeHandler}/>
-                    <label className="form-label" htmlFor="login">Email</label>
-                  </div>
+                            <div className="form-outline mb-4">
+                                <input type="email" id="email" name= "email" className="form-control" onChange={this.onChangeHandler}/>
+                                <label className="form-label" htmlFor="email">Email</label>
+                            </div>
 
-                  <div className="form-outline mb-4">
-                    <input type="password" id="registerPassword" name="password" className="form-control" onChange={this.onChangeHandler}/>
-                    <label className="form-label" htmlFor="registerPassword">Password</label>
-                  </div>
+                            <div className="form-outline mb-4">
+                                <input type="password" id="registerPassword" name="password" className="form-control" onChange={this.onChangeHandler}/>
+                                <label className="form-label" htmlFor="registerPassword">Password</label>
+                            </div>
 
-                  <button type="submit" className="btn btn-primary btn-block mb-3">Sign in</button>
-                </form>
+                            <button type="submit" className="btn btn-primary btn-block mb-3">Sign in</button>
+                            </form>
               </div>
                 </div>
             </div>
