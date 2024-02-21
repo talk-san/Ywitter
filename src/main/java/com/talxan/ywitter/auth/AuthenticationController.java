@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-    private final UserRepository repository;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register (@Valid @RequestBody RegisterRequest request, HttpServletRequest httpServletRequest) throws MessagingException, UnsupportedEncodingException {
@@ -42,6 +41,12 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid verification code");
         }
     }
+
+    @GetMapping("/reset")
+    public ResponseEntity<String> resetPassword(String token) {
+        return ResponseEntity.ok(service.resetPassword(token));
+    }
+
 
     private String getURL(HttpServletRequest request) {
         return request.getRequestURL().toString().replace(request.getServletPath(), "");

@@ -116,4 +116,8 @@ public class AuthenticationService {
             return true;
         }
     }
+
+    public String resetPassword(String email) {
+        return null;
+    }
 }
