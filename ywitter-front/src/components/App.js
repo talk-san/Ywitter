@@ -3,40 +3,28 @@ import logo from '../logo.png'
 
 import Header from './Header'
 import AppContent from './AppContent'
-import Navbar from './Navbar';
-import Feed from './Feed';
-import TweetForm from './TweetForm';
-import { useState } from 'react';
+import Tweets from './Tweets'
 import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
 
 
 function App() {
-
-    const [tweets, setTweets] = useState([]);
-    const handleTweetSubmit = (tweet) => {
-        setTweets([...tweets, {id:tweets.length+1, text:tweet}]);
-    };
     return (
-        <div>
-            
-            <Header pageTitle="Ywitter" logoSrc = {logo} />
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col">
-                        <AppContent/>
-            <Router>
-                        <Navbar />
-                        <Routes>
-                          <Route path="/" element={<Feed tweets={tweets} />} />
-                        </Routes>
-                        <TweetForm onTweetSubmit={handleTweetSubmit} />
-            </Router>
-                         
+        <Router>
+            <div>
+                <Header pageTitle="Ywitter" logoSrc={logo} />
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col">
+                            {/* Define routes */}
+                            <Routes>
+                                <Route path="/" element={<AppContent />} /> {/* Main page */}
+                                <Route path="/feed" element={<Tweets />} /> {/* Route for /feed */}
+                            </Routes>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-        </div>
+        </Router>
     );
 }
 

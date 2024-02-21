@@ -7,6 +7,8 @@ import Buttons from "./Buttons"
 import Tweets from "./Tweets";
 
 import {request, setAuthHeader} from '../axios_helper'
+import Feed from "./Feed";
+
 
 export default class AppContent extends React.Component {
   constructor(props) {
@@ -16,6 +18,7 @@ export default class AppContent extends React.Component {
     };
   }  
   
+
   login = () => {
     this.setState({componentToShow: "login"})
   };
@@ -34,8 +37,8 @@ export default class AppContent extends React.Component {
         password: password
       }
       ).then((response) => {
-        this.setState({componentToShow: "tweets"});
         setAuthHeader(response.data.token);
+        this.setState({componentToShow: "feed"})
       }).catch((error) => {
         setAuthHeader(null);
         this.setState({componentToShow: "welcome"});
@@ -69,6 +72,7 @@ export default class AppContent extends React.Component {
             {this.state.componentToShow === "messages" && <AuthContent/>}
             {this.state.componentToShow === "login" && <LoginForm onLogin={this.onLogin} onRegister={this.onRegister}/>}
             {this.state.componentToShow === "tweets" && <Tweets/>}
+            {this.state.componentToShow === "feed" && <Feed/>}
       
           </div>  
         );

@@ -1,15 +1,15 @@
+import React, { Component } from 'react';
+import Tweets from './Tweets'; // Import the Tweets component
 
-import React from 'react';
-
-const Feed = ({ tweets }) => {
-  return (
-    <div>
-      {tweets.map((tweet) => (
-        <div key={tweet.id}>{tweet.text}</div>
-      ))}
-    </div>
-  );
-};
+class Feed extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Welcome to Ywitter</h1>
+        <Tweets tweets={this.props.tweets} /> {/* Render the Tweets component */}
+      </div>
+    );
+  }
+}
 
 export default Feed;
-
