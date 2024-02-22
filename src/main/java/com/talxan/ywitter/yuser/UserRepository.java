@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findFollowersByYuserId(Integer yuserId);
 
     Optional<User> findByVerificationToken(String verification_token);
+
+    List<User> findAllbyStatus(Status status);
 }

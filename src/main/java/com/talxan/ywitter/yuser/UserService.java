@@ -90,5 +90,22 @@ public class UserService {
         return (com.talxan.ywitter.yuser.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public void saveUser(User user) {
+        user.setStatus(Status.ONLINE);
+        userRepository.save(user);
+    }
+
+    public void disconnect(User user) {
+        var storedUser = userRepository.findById(user.getYuserId())
+                .orElse(null);
+        if (storedUser != null) {
+            user.setStatus(Status.OFFLINE);
+            userRepository.save(user);
+        }
+    }
+
+    public List<User> findUsers() {
+        return userRepository.findAllbyStatus(Status.ONLINE);
+    }
 
 }
