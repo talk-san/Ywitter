@@ -10,10 +10,12 @@ public class PostMapper {
     public static PostResponse mapToPostResponse(Post post) {
         User postUser = post.getPostYuser();
         return PostResponse.builder()
-                .contents(post.getContent())
+                .postId(post.getPostId())
+                .text(post.getText())
                 .username(postUser.getUsername())
                 .firstName(postUser.getFirstName())
                 .postedAt(post.getPostedAt())
+                .parentPost(post.getParentPost())
                 .build();
     }
 }

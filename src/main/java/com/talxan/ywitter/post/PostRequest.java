@@ -4,8 +4,8 @@ import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class PostRequest {
-    private String content;
+    private String text;
 }
