@@ -6,16 +6,28 @@
 .App-title {
     font-size: 1.5em;
 }
+  
+  ::-webkit-scrollbar {
+    width: 10px; 
+  }
+  
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #353535; 
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #111111; 
+  }
 
-.App-header {
-    background-color: #221d1d;
-    height: 150px;
-    padding: 20px;
-    color: white;
-    text-align: center;
-}
-
-.custom-login-button {
-    background-color: #221d1d;
-    color: white; 
-}
+  body::-webkit-scrollbar {
+    position: fixed;
+    right: 0;
+    z-index: 9999; 
+    width: 10px; 
+  }
