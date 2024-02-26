@@ -1,0 +1,33 @@
+.searchbar {
+    width: 33%; 
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .searchbar > div {
+    margin-bottom: 10px;
+  }
+  
+  .user-list {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .user-list h2 {
+    margin-top: 0;
+  }
+  
+  .searchbar {
+    color: white; 
+  }
+  
+  .searchbar input[type="text"],
+  .searchbar button,
+  .searchbar .user-list h2,
+  .searchbar .user-list li {
+    color: white; 
+  }
+  
+
+  

@@ -1,0 +1,14 @@
+.main-button, .post-button {
+    background-color: #007bff; /* Blue background */
+    color: #fff; /* White text color */
+    border: none; /* No border */
+    padding: 8px 16px;
+    border-radius: 6px; /* Slightly rounded corners */
+    cursor: pointer;
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.main-button:hover, .post-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
