@@ -45,13 +45,13 @@ public class UserService {
     @Transactional
     public List<UserResponse> getFollowing() {
         User currUser = getCurrentUser();
-        return currUser.getFollowing().stream().map(UserMapper::toUserResponse).collect(Collectors.toList());
+        return currUser.getFollowing().stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
     @Transactional
     public List<UserResponse> getFollowers() {
         User currUser = getCurrentUser();
-        return userRepository.findFollowersByYuserId(currUser.getYuserId()).stream().map(UserMapper::toUserResponse).collect(Collectors.toList());
+        return userRepository.findFollowersByYuserId(currUser.getYuserId()).stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
     public String uploadPhoto(Integer id, MultipartFile file) {

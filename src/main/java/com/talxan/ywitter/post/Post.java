@@ -6,6 +6,7 @@ import com.talxan.ywitter.yuser.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Post {
     private Post parentPost;
 
     @Transient
-    private List<Post> comments; // should I keep this?
+    private List<Post> comments = new ArrayList<>(); // should I keep this?
 
     @OneToMany(mappedBy = "likePost", cascade = CascadeType.ALL)
     private List<Like> likes;

@@ -31,8 +31,7 @@ public class PostController {
 
     @PostMapping("/like/{id}")
     public ResponseEntity<String> like(@PathVariable("id") Integer postToLike) throws BadRequestException {
-        postService.like(postToLike);
-        return ResponseEntity.ok("Post liked");
+        return ResponseEntity.ok(postService.like(postToLike));
     }
 
     @PutMapping("/update/{id}")

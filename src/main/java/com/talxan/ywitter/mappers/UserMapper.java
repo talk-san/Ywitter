@@ -4,7 +4,7 @@ import com.talxan.ywitter.yuser.User;
 import com.talxan.ywitter.yuser.UserResponse;
 
 public class UserMapper {
-    public static UserResponse toUserResponse(User user) {
+    public static UserResponse mapToUserResponse(User user) {
         return UserResponse.builder()
                 .email(user.getEmail())
                 .firstName(user.getFirstName())

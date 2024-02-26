@@ -2,6 +2,7 @@ package com.talxan.ywitter.post;
 
 import com.talxan.ywitter.exceptions.PostNotFoundException;
 import com.talxan.ywitter.mappers.PostMapper;
+import com.talxan.ywitter.mappers.UserMapper;
 import com.talxan.ywitter.post.like.Like;
 import com.talxan.ywitter.post.like.LikeRepository;
 import com.talxan.ywitter.yuser.User;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.talxan.ywitter.mappers.PostMapper.mapToPostResponse;
@@ -51,21 +53,28 @@ public class PostService {
                 .postedAt(new Date())
                 .parentPost(parentPost)
                 .build();
-        parentPost.getComments().add(post);
+        parentPost.getComments().add(post); // Also keeping comments separate to avoid database hits?
         postRepository.save(post);
         return PostMapper.mapToPostResponse(post);
     }
 
     @Transactional
-    public void like(Integer postToLike) throws BadRequestException {
+    public String like(Integer postToLike) throws BadRequestException {
         var post = postRepository.findById(postToLike).orElseThrow(PostNotFoundException::new);
         var user = userService.getCurrentUser();
-        var like = Like.builder().likeUser(user).likePost(post).build();
 
-        if (post.getLikes().stream().anyMatch(l -> l.getLikeUser().equals(user))) { //TODO This does not work, fix
-            throw new BadRequestException(); // don't return ResponseEntity here, only in controller
+        Optional<Like> alreadyLiked = post.getLikes().stream()
+                .filter(l -> l.getLikeUser().getYuserId().equals(user.getYuserId()) && l.getLikePost().getPostId().equals(post.getPostId()))
+                .findFirst();
+
+        if (alreadyLiked.isPresent()) {
+            Like value = alreadyLiked.get();
+            post.getLikes().remove(value);
+            likeRepository.deleteById(value.getLikeId()); // Unlike
+            return "Post unliked";
         } else {
-            likeRepository.save(like);
+            likeRepository.save(Like.builder().likeUser(user).likePost(post).build());
+            return "Post liked";
         }
     }
 

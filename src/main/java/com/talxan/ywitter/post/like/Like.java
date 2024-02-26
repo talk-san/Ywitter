@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Like {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer likeId;
 
     @ManyToOne
@@ -25,4 +25,13 @@ public class Like {
 
     @ManyToOne
     private Post likePost;
+
+    @Override
+    public String toString() {
+        return "Like{" +
+                "likeId=" + likeId +
+                ", likeUserId=" + likeUser.getYuserId() +
+                ", likePostId=" + likePost.getPostId() +
+                '}';
+    }
 }

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +25,7 @@ public class AdminService {
 
     @Transactional
     public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream().map(UserMapper::toUserResponse).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
     @Transactional
