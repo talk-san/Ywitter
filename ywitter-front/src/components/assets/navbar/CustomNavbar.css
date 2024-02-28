@@ -1,0 +1,18 @@
+.custom-nav-link {
+    color: white;
+    background-color: transparent;
+    transition: background-color 0.3s;
+    padding-left: 25px;
+}
+
+.custom-nav-link:hover {
+    background-color: #222;
+}
+
+.logo-wrapper {
+    transition: background-color 0.3s;
+}
+
+.logo-wrapper:hover {
+    background-color: #222;
+}

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import {request, setAuthHeader} from "../axios_helper";
+import { useNavigate } from 'react-router-dom';
 
 export default class LoginForm extends React.Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -11,11 +13,13 @@ export default class LoginForm extends React.Component {
           lastName: "",
           email: "",
           password: "",
-          onLogin: props.onLogin,
-          onRegister: props.onRegister
+          onLogin: this.props.onLogin,
+          onRegister: this.props.onRegister,
+          error: this.props.error,
         };
     }
-    
+
+
     onChangeHandler = (event) => {
         let name = event.target.name;
         let value = event.target.value;
@@ -23,9 +27,8 @@ export default class LoginForm extends React.Component {
     }
 
     onSubmitLogin = (e) => {
-        this.state.onLogin(e, this.state.email, this.state.password);
+        this.state.onLogin(e, this.state.email, this.state.password)
     };
-
     onSubmitRegister = (e) => {
         this.state.onRegister (
             e,
@@ -53,11 +56,11 @@ export default class LoginForm extends React.Component {
                         <div className={classNames("tab-pane", "fade", this.state.active === "login" ? "show active" : "")} id="pills-login">
                             <form onSubmit={this.onSubmitLogin}>
                                 <div className="form-outline mb-2">
-                                    <input type="email" id="email" name="email" className="form-control" onChange={this.onChangeHandler} />
+                                    <input type="email" id="email" name="email" className="form-control" onChange={this.onChangeHandler}/>
                                     <label className="form-label text-white" htmlFor="email">Email</label>
                                 </div>
                                 <div className="form-outline mb-0">
-                                    <input type="password" id="loginPassword" name="password" className="form-control" onChange={this.onChangeHandler} />
+                                    <input type="password" id="loginPassword" name="password" className="form-control" onChange={this.onChangeHandler}/>
                                     <label className="form-label text-white" htmlFor="loginPassword">Password</label>
                                 </div>
                                 <div className="form-outline mb-2">
@@ -96,6 +99,7 @@ export default class LoginForm extends React.Component {
                                 <button type="submit" className="btn btn-primary btn-block mb-4">Send Reset Email</button>
                             </form>
                         </div>
+                        {this.state.error && <div className="error">{this.state.error}</div>}
                     </div>
                 </div>
             </div>

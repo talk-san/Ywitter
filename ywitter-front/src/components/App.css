@@ -6,28 +6,32 @@
 .App-title {
     font-size: 1.5em;
 }
-  
-  ::-webkit-scrollbar {
-    width: 10px; 
-  }
-  
-  
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #353535; 
-    border-radius: 5px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #111111; 
-  }
 
-  body::-webkit-scrollbar {
-    position: fixed;
-    right: 0;
-    z-index: 9999; 
-    width: 10px; 
-  }
+.form-control::placeholder {
+  color: #64686d !important;
+  opacity: 1;
+}
+  
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #353535;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #111111;
+}
+
+body::-webkit-scrollbar {
+  position: fixed;
+  right: 0;
+  z-index: 9999;
+  width: 10px;
+}

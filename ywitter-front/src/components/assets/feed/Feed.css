@@ -1,0 +1,8 @@
+.hover {
+    background-color: transparent;
+    transition: background-color 0.3s;
+}
+
+.hover:hover {
+    background-color: #222;
+}
