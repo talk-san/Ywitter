@@ -1,10 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import {request, setAuthHeader} from "../axios_helper";
-import { useNavigate } from 'react-router-dom';
 
 export default class LoginForm extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -13,11 +11,64 @@ export default class LoginForm extends React.Component {
           lastName: "",
           email: "",
           password: "",
-          onLogin: this.props.onLogin,
-          onRegister: this.props.onRegister,
-          error: this.props.error,
         };
     }
+
+
+    onLogin = (e, email, password) => {
+        e.preventDefault();
+        request("POST", "/api/v1/auth/authenticate", { email, password })
+            .then((response) => {
+                setAuthHeader(response.data.token);
+                this.props.navigate("/feed");
+            })
+            .catch((error) => {
+                setAuthHeader(null);
+                console.log("Something went wrong:", error.response.data, error.response.status);
+                console.log(error)
+                const errMessage = error.response.data;
+                const errCode = error.response.status;
+
+                if (errCode === 403) {
+                    this.setState({ error: "Password is wrong. Please try again" });
+                }
+
+                if (errCode === 409) {
+                    this.setState({ error: "User with the provided email was not found." });
+                }
+
+            });
+    };
+
+
+    onSubmitLogin = (e) => {
+        e.preventDefault();
+
+        const { email, password } = this.state;
+
+        if (!email.trim() || !password.trim()) {
+            this.setState({ error: "Email and password are required." });
+            return;
+        }
+
+        this.onLogin(e, email, password);
+    };
+
+    onRegister = (e, firstName, lastName, email, password) => {
+        e.preventDefault();
+        try {
+            request(
+                "POST",
+                "/api/v1/auth/register", { firstName, lastName, email, password })
+                .then(
+                    (response) => {
+                        setAuthHeader(response.data.token);
+                        this.props.navigate("/feed")
+                    })
+        } catch (err) {
+            console.log("something went wrong")
+        }
+    };
 
 
     onChangeHandler = (event) => {
@@ -26,11 +77,9 @@ export default class LoginForm extends React.Component {
         this.setState({[name]: value})
     }
 
-    onSubmitLogin = (e) => {
-        this.state.onLogin(e, this.state.email, this.state.password)
-    };
+
     onSubmitRegister = (e) => {
-        this.state.onRegister (
+        this.onRegister (
             e,
             this.state.firstName,
             this.state.lastName,
@@ -39,22 +88,26 @@ export default class LoginForm extends React.Component {
         );
     };
 
+    onSubmitForgotPassword() {
+
+    }
+
     render() {
         return (
             <div className='row justify-content-center'>
                 <div className='col-4'>
                     <ul className='nav nav-pills nav-justified mb-3' id='ex1' role='tablist'>
                         <li className="nav-item" role="presentation">
-                            <button className={classNames("nav-link", this.state.active === "login" ? "active" : "text-white")} id="tab-login" onClick={() => this.setState({ active: "login" })}>Login</button>
+                            <button className={classNames("nav-link", this.state.active === "login" ? "active" : "text-white")} id="tab-login" onClick={() => this.setState({ active: "login", error: ""})}>Login</button>
                         </li>
                         <li className="nav-item" role="presentation">
-                            <button className={classNames("nav-link", this.state.active === "register" ? "active" : "text-white")} id="tab-register" onClick={() => this.setState({ active: "register" })}>Register</button>
+                            <button className={classNames("nav-link", this.state.active === "register" ? "active" : "text-white")} id="tab-register" onClick={() => this.setState({ active: "register", error: " " })}>Register</button>
                         </li>
                     </ul>
 
                     <div className="tab-content">
                         <div className={classNames("tab-pane", "fade", this.state.active === "login" ? "show active" : "")} id="pills-login">
-                            <form onSubmit={this.onSubmitLogin}>
+                            <form className="needs-validation" onSubmit={this.onSubmitLogin}>
                                 <div className="form-outline mb-2">
                                     <input type="email" id="email" name="email" className="form-control" onChange={this.onChangeHandler}/>
                                     <label className="form-label text-white" htmlFor="email">Email</label>
@@ -63,6 +116,7 @@ export default class LoginForm extends React.Component {
                                     <input type="password" id="loginPassword" name="password" className="form-control" onChange={this.onChangeHandler}/>
                                     <label className="form-label text-white" htmlFor="loginPassword">Password</label>
                                 </div>
+                                {this.state.error && <div className="error" style={{ color: 'white' }}>{this.state.error}</div>}
                                 <div className="form-outline mb-2">
                                     <button type="button" className="btn btn-link" style={{ marginLeft: '-13px' }} onClick={() => this.setState({ active: "forgotPassword" })}>Forgot Password?</button>
                                 </div>
@@ -87,9 +141,11 @@ export default class LoginForm extends React.Component {
                                     <input type="password" id="registerPassword" name="password" className="form-control" onChange={this.onChangeHandler} />
                                     <label className="form-label text-white" htmlFor="registerPassword">Password</label>
                                 </div>
+
                                 <button type="submit" className="btn btn-primary btn-block mb-3">Sign up</button>
                             </form>
                         </div>
+
                         <div className={classNames("tab-pane", "fade", this.state.active === "forgotPassword" ? "show active" : "")} id="pills-forgotPassword">
                             <form onSubmit={this.onSubmitForgotPassword}>
                                 <div className="form-outline mb-2">
@@ -99,10 +155,11 @@ export default class LoginForm extends React.Component {
                                 <button type="submit" className="btn btn-primary btn-block mb-4">Send Reset Email</button>
                             </form>
                         </div>
-                        {this.state.error && <div className="error">{this.state.error}</div>}
+
                     </div>
                 </div>
             </div>
         );
     }
+
 }
