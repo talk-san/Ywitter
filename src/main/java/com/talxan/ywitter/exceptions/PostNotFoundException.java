@@ -3,7 +3,7 @@ package com.talxan.ywitter.exceptions;
 public class PostNotFoundException extends RuntimeException {
 
     public PostNotFoundException() {
-        super("Post not found");
+        super("This post is no longer available");
     }
 
     public PostNotFoundException(String message) {

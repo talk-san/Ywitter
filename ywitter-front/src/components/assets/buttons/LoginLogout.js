@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function Buttons(props) {
+export default function LoginLogout(props) {
     return (
         <div className="row">
             <div className="col-md-12 text-center" style={{marginTop: "30px"}}>

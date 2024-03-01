@@ -1,11 +1,13 @@
 package com.talxan.ywitter.post;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class PostRequest {
-    private String content;
+    @NotBlank
+    private String text;
 }
