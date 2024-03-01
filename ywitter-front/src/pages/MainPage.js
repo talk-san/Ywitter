@@ -5,7 +5,6 @@ import { Row, Col } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
 import CustomNavbarComponent from '../components/assets/navbar/CustomNavbar';
-import ForYouFollowing from '../components/assets/feed/ForYouFollowing';
 
 export const MainPage = () => {
   return (
@@ -15,8 +14,7 @@ export const MainPage = () => {
           <CustomNavbarComponent />
         </Col>
         <Col xs={12} md={4}>
-          <ForYouFollowing/>
-          <Feed />
+          <Feed/>
         </Col>
         <Col xs={12} md={4}>
           <Searchbar />
