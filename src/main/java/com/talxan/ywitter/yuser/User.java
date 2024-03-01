@@ -39,12 +39,14 @@ public class User implements UserDetails {
     @JoinTable(name = "following",
             joinColumns = @JoinColumn(name = "yuser_id"),
             inverseJoinColumns = @JoinColumn(name = "following_id"))
+    @Builder.Default
     private List<User> following = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "post_likes",
             joinColumns = @JoinColumn(name = "yuser_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
+    @Builder.Default
     private List<Post> likedPosts = new ArrayList<>();
 
     @Enumerated

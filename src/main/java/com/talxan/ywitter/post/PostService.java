@@ -36,7 +36,7 @@ public class PostService {
                 .postedAt(new Date())
                 .build();
         postRepository.save(post);
-        return mapToPostResponse(post); // Also why am I even mapping ?
+        return mapToPostResponse(post);
     }
 
     @Transactional

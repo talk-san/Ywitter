@@ -32,9 +32,11 @@ public class Post {
     private Post parentPost;
 
     @Transient
-    private List<Post> comments = new ArrayList<>(); // should I keep this?
+    @Builder.Default
+    private List<Post> comments = new ArrayList<>();
 
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.EAGER)
+    @Builder.Default
     private List<User> likes = new ArrayList<>();
 
     @Override

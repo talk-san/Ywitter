@@ -30,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ResponseEntity<String> follow(Integer id) {
+    public String follow(Integer id) {
         User toFollow = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         User currUser = getCurrentUser();
 
@@ -41,18 +41,17 @@ public class UserService {
         if (currUser.getFollowing().contains(toFollow)) {
             currUser.getFollowing().remove(toFollow);
             update(currUser);
-            return ResponseEntity.ok().body(currUser.getFirstName() + " unfollowed " + toFollow.getFirstName());
+            return currUser.getFirstName() + " unfollowed " + toFollow.getFirstName();
         } else {
             currUser.getFollowing().add(toFollow);
             update(currUser);
-            return ResponseEntity.ok().body(currUser.getFirstName() + " followed " + toFollow.getFirstName());
+            return currUser.getFirstName() + " followed " + toFollow.getFirstName();
         }
     }
 
     @Transactional
     public List<UserResponse> getFollowing() {
-        User currUser = getCurrentUser();
-        return currUser.getFollowing().stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
+        return getCurrentUser().getFollowing().stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
     @Transactional
@@ -61,20 +60,19 @@ public class UserService {
         return userRepository.findFollowersByYuserId(currUser.getYuserId()).stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
-    public String uploadPhoto(Integer id, MultipartFile file) {
-        User user = getCurrentUser();
-        //Integer id = user.getId();
-        String photoUrl = photoFunction.apply(String.valueOf(id), file);
-        user.setPhotoUrl(photoUrl);
-        userRepository.save(user);
-        return photoUrl;
-    }
-
     public User update(User user) {
         if(!userRepository.existsById(user.getYuserId()))
             throw new UserNotFoundException(user.getYuserId() + " is not found.");
         userRepository.save(user);
         return user;
+    }
+
+    public String uploadPic(Integer id, MultipartFile file) {
+        User user = getCurrentUser();
+        String photoUrl = photoFunction.apply(String.valueOf(id), file);
+        user.setPhotoUrl(photoUrl);
+        userRepository.save(user);
+        return photoUrl;
     }
 
     private final Function<String, String> fileExtension = filename -> Optional.of(filename).filter(name -> name.contains("."))
@@ -87,7 +85,7 @@ public class UserService {
             Files.copy(image.getInputStream(), fileStorageLocation.resolve(id + fileExtension.apply(image.getOriginalFilename())), REPLACE_EXISTING);
             return ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/api/v1/image/" + id + fileExtension.apply(image.getOriginalFilename())).toUriString();
+                    .path("/api/v1/uploads/image/" + id + fileExtension.apply(image.getOriginalFilename())).toUriString();
         } catch (Exception e) {
             throw new RuntimeException("Unable to save image");
         }

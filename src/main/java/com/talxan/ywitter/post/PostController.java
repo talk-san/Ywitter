@@ -53,7 +53,6 @@ public class PostController {
 
     @GetMapping("/feed")
     public ResponseEntity<List<PostResponse>> getFeed() {
-        List<PostResponse> posts = postService.getFeed();
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(postService.getFeed());
     }
 }
