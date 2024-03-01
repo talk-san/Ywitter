@@ -5,7 +5,6 @@ import com.talxan.ywitter.post.PostResponse;
 import com.talxan.ywitter.yuser.User;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -20,9 +19,9 @@ public class PostMapper {
                 .username(postUser.getUsername())
                 .firstName(postUser.getFirstName())
                 .postedAt(post.getPostedAt())
-                .parentPostId(Optional.ofNullable(post.getParentPost()).map(Post::getPostId).orElse(-1))
-                .numOfComments(Optional.ofNullable(post.getComments()).map(List::size).orElse(0))
-                //.numOfLikes(Optional.ofNullable(post.getLikes()).map(List::size).orElse(0)) // throws error
+                .parentPostId(Optional.ofNullable(post.getParentPost()).map(Post::getPostId).orElse(0))
+                .numOfComments(post.getComments().size())
+                .numOfLikes(post.getLikes().size())
                 .build();
     }
 }

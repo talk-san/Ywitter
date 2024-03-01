@@ -26,10 +26,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
     @Transactional
-    public ResponseEntity<String> followUser(Integer id) {
+    public ResponseEntity<String> follow(Integer id) {
         User toFollow = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         User currUser = getCurrentUser();
 
@@ -37,9 +38,15 @@ public class UserService {
             throw new SelfFollowException("You cannot follow yourself!");
         }
 
-        currUser.getFollowing().add(toFollow);
-        update(currUser);
-        return ResponseEntity.ok().body(currUser.getFirstName() + " followed user " + toFollow.getFirstName());
+        if (currUser.getFollowing().contains(toFollow)) {
+            currUser.getFollowing().remove(toFollow);
+            update(currUser);
+            return ResponseEntity.ok().body(currUser.getFirstName() + " unfollowed " + toFollow.getFirstName());
+        } else {
+            currUser.getFollowing().add(toFollow);
+            update(currUser);
+            return ResponseEntity.ok().body(currUser.getFirstName() + " followed " + toFollow.getFirstName());
+        }
     }
 
     @Transactional

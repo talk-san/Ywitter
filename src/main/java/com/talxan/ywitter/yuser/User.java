@@ -6,8 +6,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Builder
@@ -40,7 +39,13 @@ public class User implements UserDetails {
     @JoinTable(name = "following",
             joinColumns = @JoinColumn(name = "yuser_id"),
             inverseJoinColumns = @JoinColumn(name = "following_id"))
-    private List<User> following;
+    private List<User> following = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_likes",
+            joinColumns = @JoinColumn(name = "yuser_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private List<Post> likedPosts = new ArrayList<>();
 
     @Enumerated
     private Role role;
@@ -78,5 +83,21 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.getEnabled();
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        User other = (User) obj;
+        return Objects.equals(this.yuserId, other.yuserId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(yuserId);
     }
 }

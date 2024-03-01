@@ -20,8 +20,8 @@ public class UserController {
     }
 
     @PostMapping("/follow/{id}")
-    public ResponseEntity<String> followUser(@PathVariable Integer id) {
-        return userService.followUser(id);
+    public ResponseEntity<String> follow(@PathVariable Integer id) {
+        return userService.follow(id);
     }
 
     @GetMapping("/getFollowing")
