@@ -14,7 +14,6 @@ export const Searchbar = () => {
           <input className="rounded-pill" type="text" placeholder="⌕ Search... " style={{
               marginTop: '10px', width: '300px', height: '50px', paddingLeft: '20px', backgroundColor: '#202327', border: 'none', color: "white"}} />
         </div>
-
       </div>
     );
   };

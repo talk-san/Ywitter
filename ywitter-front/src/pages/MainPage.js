@@ -5,6 +5,7 @@ import { Row, Col } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
 import CustomNavbarComponent from '../components/assets/navbar/CustomNavbar';
+import WhoToFollow from "../components/assets/users-card/WhoToFollow";
 
 export const MainPage = () => {
   return (
@@ -18,6 +19,7 @@ export const MainPage = () => {
         </Col>
         <Col xs={12} md={4}>
           <Searchbar />
+          <WhoToFollow/>
         </Col>
       </Row>
     </Container>

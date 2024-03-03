@@ -20,7 +20,7 @@ const NewPost = ({ onPostSuccess }) => {
 
     return (
         <div style={{ color: 'white' }}>
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', gap: '1rem', borderRadius: '25px'}}>
+            <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', gap: '1rem', borderRadius: '15px'}}>
                <textarea
                    value={text}
                    onChange={(e) => setText(e.target.value)}
