@@ -24,17 +24,19 @@ export default class LoginForm extends React.Component {
             })
             .catch((error) => {
                 setAuthHeader(null);
-                console.log("Something went wrong:", error.response.data, error.response.status);
-                console.log(error)
-                const errMessage = error.response.data;
-                const errCode = error.response.status;
+                if (error.response) {
+                    const errMessage = error.response.data;
+                    const errCode = error.response.status;
 
-                if (errCode === 403) {
-                    this.setState({ error: "Password is wrong. Please try again" });
-                }
+                    if (errCode === 403) {
+                        this.setState({ error: "Password is wrong. Please try again" });
+                    }
 
-                if (errCode === 409) {
-                    this.setState({ error: "User with the provided email was not found." });
+                    if (errCode === 409) {
+                        this.setState({ error: "User with the provided email was not found." });
+                    }
+                } else {
+                    this.setState({ error: "Error connecting to the server. Please try again later." });
                 }
 
             });

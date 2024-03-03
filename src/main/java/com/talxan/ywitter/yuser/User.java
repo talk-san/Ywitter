@@ -102,4 +102,13 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(yuserId);
     }
+
+    @Override
+    public String toString() {
+        return "YUser{" +
+                "yuserId=" + yuserId +
+                ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
