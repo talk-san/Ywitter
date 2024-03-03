@@ -41,4 +41,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getFollowers());
     }
 
+    @GetMapping("/whoToFollow")
+    public ResponseEntity<List<UserResponse>> getWhoToFollow() {return ResponseEntity.ok(userService.getWhoToFollow());}
+
+    @GetMapping("/getUser")
+    public ResponseEntity<UserResponse> getUser() {return ResponseEntity.ok(userService.getUser());}
+
 }

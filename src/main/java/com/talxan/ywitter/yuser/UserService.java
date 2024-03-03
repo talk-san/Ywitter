@@ -55,9 +55,27 @@ public class UserService {
     }
 
     @Transactional
+    public List<UserResponse> getWhoToFollow() {
+        User currUser = getCurrentUser();
+        List<User> allUsers = getAllUsers();
+        List<User> following = currUser.getFollowing();
+        List<UserResponse> collect = allUsers.stream()
+                .filter(u -> !(following.contains(u) || u.equals(currUser)))
+                .limit(10)
+                .map(UserMapper::mapToUserResponse)
+                .collect(Collectors.toList());
+        return collect;
+    }
+
+    @Transactional
     public List<UserResponse> getFollowers() {
         User currUser = getCurrentUser();
         return userRepository.findFollowersByYuserId(currUser.getYuserId()).stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UserResponse getUser() {
+        return UserMapper.mapToUserResponse(getCurrentUser());
     }
 
     public User update(User user) {
@@ -93,6 +111,10 @@ public class UserService {
 
     public User getCurrentUser() {
         return (com.talxan.ywitter.yuser.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
 
