@@ -12,7 +12,7 @@ public class ChatRoomService {
     private ChatRoomRepository chatRoomRepository;
 
     public Optional<String> getChatRoomId(Integer senderId, Integer receiverId, boolean createNewRoomIfNotExist) {
-        return chatRoomRepository.findByIdOfSenderAndReceiver(senderId, receiverId)
+        return chatRoomRepository.findBySenderIdAndReceiverId(senderId, receiverId)
                 .map(ChatRoom::getChatId)
                 .or(() -> {
                     if (createNewRoomIfNotExist) {

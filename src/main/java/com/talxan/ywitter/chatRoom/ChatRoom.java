@@ -2,9 +2,9 @@ package com.talxan.ywitter.chatRoom;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "chatRoom")
+@Table(name = "chat_room")
 public class ChatRoom {
 
     @Id
@@ -20,6 +20,5 @@ public class ChatRoom {
     private String chatId;
     private Integer senderId;
     private Integer receiverId;
-
 
 }
