@@ -12,8 +12,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResponse {
+    private Integer postId;
     private String username;
     private String firstName;
-    private String contents;
+    private String text;
     private Date postedAt;
+    private String userPhoto;
+    private Integer parentPostId;
+    private Integer numOfLikes;
+    private Integer numOfComments;
 }

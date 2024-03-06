@@ -1,6 +1,7 @@
 package com.talxan.ywitter.post;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +14,24 @@ public class PostController {
 
     private final PostService postService;
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<PostResponse> get(@PathVariable Integer id) {
+        return ResponseEntity.ok(postService.get(id));
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest request) {
-        return ResponseEntity.ok(postService.createPost(request));
+    public ResponseEntity<PostResponse> create(@RequestBody PostRequest request) {
+        return ResponseEntity.ok(postService.create(request));
+    }
+
+    @PostMapping("/comment/{id}")
+    public ResponseEntity<PostResponse> comment(@PathVariable("id") Integer parentPostId, @RequestBody PostRequest request) {
+        return ResponseEntity.ok(postService.comment(parentPostId, request));
+    }
+
+    @PostMapping("/like/{id}")
+    public ResponseEntity<String> like(@PathVariable("id") Integer postToLike) throws BadRequestException {
+        return ResponseEntity.ok(postService.like(postToLike));
     }
 
     @PutMapping("/update/{id}")
@@ -25,7 +41,8 @@ public class PostController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePostById(@PathVariable Integer id) {
-        return postService.deletePostById(id);
+        postService.deletePostById(id);
+        return ResponseEntity.ok("Post deleted");
     }
 
     @GetMapping("/all")
@@ -36,7 +53,6 @@ public class PostController {
 
     @GetMapping("/feed")
     public ResponseEntity<List<PostResponse>> getFeed() {
-        List<PostResponse> posts = postService.getFeed();
-        return ResponseEntity.ok(posts);
+        return ResponseEntity.ok(postService.getFeed());
     }
 }

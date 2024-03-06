@@ -1,25 +1,29 @@
-import React from 'react'; 
-import Buttons from '../components/Buttons';
-import Feed from '../components/Feed';
-import { setAuthHeader } from '../axios_helper';
-import WelcomeContent from '../components/WelcomeContent';
+import Feed from '../components/assets/feed/Feed';
+import { Searchbar } from '../components/assets/searchbar/Searchbar';
+import React from 'react';
+import { Row, Col } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
 
-export default class MainPage extends React.Component {
+import CustomNavbarComponent from '../components/assets/navbar/CustomNavbar';
+import WhoToFollow from "../components/assets/users-card/WhoToFollow";
 
-  logout = () => {
-    this.setState({componentToShow: "welcome"})
-    setAuthHeader(null);
-  };
-
-  render() {
-    return (
-      <div>
-        <Feed feed={this.props.feed} /> 
-        <Buttons login={this.props.login} logout={this.logout} /> 
-        {this.state.componentToShow === "welcome" && <WelcomeContent/>}
-      </div>
-    );
-  }
-}
+export const MainPage = () => {
+  return (
+    <Container fluid style={{ height: '100vh' }}>
+      <Row>
+        <Col xs={12} md={4}>
+          <CustomNavbarComponent />
+        </Col>
+        <Col xs={12} md={4}>
+          <Feed/>
+        </Col>
+        <Col xs={12} md={4}>
+          <Searchbar />
+          <WhoToFollow/>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 

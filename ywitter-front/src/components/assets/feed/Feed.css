@@ -1,0 +1,22 @@
+.hover {
+    background-color: transparent;
+    transition: background-color 0.3s;
+}
+
+.hover:hover {
+    background-color: #222;
+}
+
+.active.selected {
+    outline: none;
+    border: none;
+    border-bottom-width: 5px;
+    border-bottom-style: solid;
+    border-bottom-color: #0d6efd !important;
+    border-radius: 5px;
+}
+
+.active.selected:focus,
+.active.selected:active {
+    outline: none !important;
+}

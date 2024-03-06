@@ -15,6 +15,10 @@ export const setAuthHeader = (token) => {
     }
 };
 
+export const isAuthenticated = () => {
+    return !!getAuthToken(); 
+  };
+
 export const request = (method, url, data) => {
     let headers = {};
     if (getAuthToken() !== null && getAuthToken !== "null") {

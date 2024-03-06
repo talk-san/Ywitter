@@ -29,8 +29,8 @@ public class RegisterRequest {
     @Email(message = "Invalid email format")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,}$",
-            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,}$",
+//            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
     private String password;
 
     private Role role = Role.USER;
