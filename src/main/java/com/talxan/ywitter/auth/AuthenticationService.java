@@ -34,7 +34,7 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request, String url) throws MessagingException, UnsupportedEncodingException {
         String email = request.getEmail();
         userRepository.findByEmail(email).ifPresent(user -> {
-            throw new EmailAlreadyTakenException();
+            throw new EmailAlreadyTakenException(email);
         });
 
         var user = User.builder()
@@ -43,13 +43,13 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .enabled(true)
+                .enabled(false)
                 .verificationToken(generateToken())
                 .build();
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        //sendVerificationMail(user, url);
+        sendVerificationMail(user, url);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -81,7 +81,8 @@ public class AuthenticationService {
         String subject = "Click here to verify your Ywitter account";
         String content = "Dear [[name]],<br>"
                 + "Please click the link below to verify your registration: [[verifyUrl]]";
-        String verifyUrl = url + "/api/v1/auth/verify?code=" + user.getVerificationToken();
+        //String verifyUrl = url + "/api/v1/auth/verify?code=" + user.getVerificationToken();
+        String verifyUrl = "http://localhost:3000/verify?code=" + user.getVerificationToken();
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
