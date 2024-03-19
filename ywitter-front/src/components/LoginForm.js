@@ -17,7 +17,8 @@ export default class LoginForm extends React.Component {
 
     onLogin = (e, email, password) => {
         e.preventDefault();
-        request("POST", "/api/v1/auth/authenticate", { email, password })
+        request("POST",
+            "/api/v1/auth/authenticate", { email, password })
             .then((response) => {
                 setAuthHeader(response.data.token);
                 this.props.navigate("/feed");

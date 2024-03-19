@@ -1,43 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { request } from '../axios_helper'; // Import your custom request function
+import { useLocation, useNavigate } from 'react-router-dom';
+import { request } from '../axios_helper';
+import logoSrc from '../components/assets/icons/logo.png';
 
 const VerificationPage = () => {
-    const { code } = useParams();
-    const [verificationResult, setVerificationResult] = useState(null);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [verificationMessage, setVerificationMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        const verifyCode = async () => {
-            try {
-                const response = await request('GET', `http://localhost:3030/verify?code=${code}`);
-                if (response.status === 200) {
-                    setVerificationResult({ success: true });
-                } else {
-                    const data = await response.data;
-                    throw new Error(data.message);
-                }
-            } catch (error) {
-                console.error('Error verifying code:', error);
-                setVerificationResult({ success: false, message: error.message });
-            }
-        };
+        const code = new URLSearchParams(location.search).get("code");
 
-        verifyCode();
-    }, [code]);
+        if (code) {
+            request('GET', `http://localhost:8080/api/v1/auth/verify?code=${code}`)
+                .then(response => {
+                    setVerificationMessage(response.data + " You can now close this tab");
+                })
+                .catch(error => {
+                    setErrorMessage(error.response.data);
+                });
+        }
+    }, [location.search]);
+
+    const handleBackToLogin = () => {
+        navigate('/login');
+    };
 
     return (
-        <div>
-            {verificationResult ? (
-                verificationResult.success ? (
-                    <p>Verification successful!</p>
-                ) : (
-                    <p>{verificationResult.message}</p>
-                )
-            ) : (
-                <p>Verifying...</p>
-            )}
+        <div className="container-fluid d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
+            <div className="row text-center">
+                <div className="col mb-4">
+                    <img src={logoSrc} alt="Logo" style={{ maxWidth: '100px' }} />
+                    <div className="d-flex flex-column bd-highlight mb-auto">
+                        <div className="p-2 bd-highlight">{verificationMessage && <p style={{ color: 'white' }}>{verificationMessage}</p>}</div>
+                        <div className="p-2 bd-highlight">{errorMessage && <p style={{ color: 'white' }}>{errorMessage}</p>}</div>
+                    </div>
+                    {(verificationMessage || errorMessage) && (
+                        <div className="btn btn-link" onClick={handleBackToLogin}>
+                            Back to login
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
-};
+}
 
 export default VerificationPage;

@@ -106,15 +106,15 @@ public class AuthenticationService {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes).substring(0, TOKEN_LENGTH);
     }
 
-    public boolean verifyEmail(String token) {
-        User user = userRepository.findByVerificationToken(token).orElseThrow(UserNotFoundException::new);
+    public String verifyEmail(String token) {
+        User user = userRepository.findByVerificationToken(token).orElseThrow(() -> new UserNotFoundException("User with verification token does not exist or token is null"));
         if (user.isEnabled()) {
-            return false;
+            return "Account is already verified!";
         } else {
             user.setVerificationToken(null);
             user.setEnabled(true);
             userRepository.save(user);
-            return true;
+            return "Account successfully verified!";
         }
     }
 }

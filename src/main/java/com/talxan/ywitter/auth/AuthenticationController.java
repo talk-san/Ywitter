@@ -40,11 +40,7 @@ public class AuthenticationController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyEmail(@Param("code") String code) {
-        if (service.verifyEmail(code)) {
-            return ResponseEntity.ok("Email verified successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid verification code");
-        }
+        return ResponseEntity.ok(service.verifyEmail(code));
     }
 
     private String getURL(HttpServletRequest request) {
