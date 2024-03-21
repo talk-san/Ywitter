@@ -1,5 +1,6 @@
 package com.talxan.ywitter.yuser;
 
+import com.talxan.ywitter.auth.PasswordResetToken;
 import com.talxan.ywitter.post.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,6 +32,9 @@ public class User implements UserDetails {
 
     @Column(name = "verification_token", length = 64)
     private String verificationToken;
+
+    @OneToOne(mappedBy = "yuser", cascade = CascadeType.ALL)
+    private PasswordResetToken passwordResetToken;
 
     @OneToMany(mappedBy = "postYuser", fetch = FetchType.EAGER)
     private List<Post> posts;
