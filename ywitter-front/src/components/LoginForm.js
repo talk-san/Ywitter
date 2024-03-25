@@ -26,7 +26,7 @@ export default class LoginForm extends React.Component {
             .catch((error) => {
                 setAuthHeader(null);
                 if (error.response) {
-                    const errMessage = error.response.data;
+                    //const errMessage = error.response.data;
                     const errCode = error.response.status;
 
                     if (errCode === 403) {
@@ -64,7 +64,7 @@ export default class LoginForm extends React.Component {
             .then(
                 (response) => {
                     this.setState({ active: "confirmation" })
-                    console.log("confirmation should eb sent")
+                    console.log("confirmation should be sent")
                 })
             .catch((regError) => {
             setAuthHeader(null);
@@ -87,6 +87,25 @@ export default class LoginForm extends React.Component {
         this.onRegister(e, firstName, lastName, email, password);
     };
 
+    onSubmitForgotPassword = (e) => {
+        e.preventDefault();
+        const { email } = this.state;
+        console.log("Email: " + email);
+        request(
+            "POST",
+            `/api/v1/auth/reset-password?email=${email}`)
+            .then(
+                (response) => {
+                    this.setState({ active: "passReset" })
+                    console.log("Reset link should be sent")
+                })
+            .catch((resetError) => {
+                if (resetError.response) {
+                    this.setState({ error: resetError.data });
+                }
+            });
+    };
+
 
     onChangeHandler = (event) => {
         let name = event.target.name;
@@ -94,9 +113,7 @@ export default class LoginForm extends React.Component {
         this.setState({[name]: value})
     }
 
-    onSubmitForgotPassword() {
 
-    }
 
     render() {
         return (
@@ -172,7 +189,7 @@ export default class LoginForm extends React.Component {
                             id="pills-forgotPassword">
                             <form onSubmit={this.onSubmitForgotPassword}>
                                 <div className="form-outline mb-2">
-                                    <input type="email" id="forgotPasswordEmail" name="forgotPasswordEmail"
+                                    <input type="email" id="email" name="email"
                                            className="form-control" onChange={this.onChangeHandler}/>
                                     <label className="form-label text-white" htmlFor="forgotPasswordEmail">Enter your
                                         email</label>
@@ -186,6 +203,19 @@ export default class LoginForm extends React.Component {
                             id="pills-forgotPassword">
                             <p className="text-white">
                                 Email verification sent to {this.state.email}
+                            </p>
+                            <p>
+                                <button type="button" className="btn btn-link" style={{marginLeft: '-13px'}}
+                                        onClick={() => this.setState({active: "login"})}>
+                                    Back to Login
+                                </button>
+                            </p>
+                        </div>
+                        <div
+                            className={classNames("tab-pane", "fade", this.state.active === "passReset" ? "show active" : "")}
+                            id="pills-passReset">
+                            <p className="text-white">
+                                Password reset link has been sent to {this.state.email}
                             </p>
                             <p>
                                 <button type="button" className="btn btn-link" style={{marginLeft: '-13px'}}

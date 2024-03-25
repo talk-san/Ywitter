@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class PasswordResetToken {
+public class PasswordResetToken { // This for some reason doesn't throws an error when adding multiple reset tokens for the same user
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
