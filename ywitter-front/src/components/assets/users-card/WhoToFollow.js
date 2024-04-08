@@ -26,22 +26,28 @@ const WhoToFollow = config => {
     };
 
     return (
-        <div className="container-fluid sticky-top">
+        <div className="container-fluid">
             <div className="rounded-5" style={{
+                position: 'relative', // Set position to relative
                 marginTop: '20px',
                 width: '300px',
-                height: '500px',
+                height: '460px',
                 paddingLeft: '20px',
                 backgroundColor: '#202327',
                 border: 'none',
-                color: "white"}}>
-                <h2 style={{ marginTop: '30px' }}>Who to Follow</h2>
-                {usersToFollow.map((user, index) => (
-                    <UserCard key={index} user={user} />
-                ))}
+                color: 'white'
+            }}>
+                <h4 style={{ position: 'absolute', top: '10px' }}>Who to Follow</h4>
+                <div style={{ position: 'absolute', top: '50px' }}>
+                    {usersToFollow.slice(0, 7).map((user, index) => (
+                        <UserCard key={index} user={user} style={{ marginBottom: '10px' }} />
+                    ))}
+                </div>
             </div>
         </div>
     );
+
+
 };
 
 export default WhoToFollow;
