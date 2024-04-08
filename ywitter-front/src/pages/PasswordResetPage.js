@@ -57,7 +57,7 @@ const PasswordResetPage = () => {
                     )}
                     {resetSuccess && (
                         <div>
-                            <p>Your password has been successfully reset.</p>
+                            <p style={{ color: 'white' }}>Your password has been successfully reset.</p>
                             <button className="btn btn-link" onClick={handleBackToLogin}>Back to login</button>
                         </div>
                     )}

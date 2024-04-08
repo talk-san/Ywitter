@@ -17,6 +17,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByVerificationToken(String verification_token);
 
-    @Query("SELECT u FROM User u JOIN u.passwordResetToken prt WHERE prt.resetToken = :token")
+    @Query("SELECT u FROM User u JOIN u.passwordResetTokens prt WHERE prt.resetToken = :token")
     Optional<User> findByResetToken(String token);
 }

@@ -21,7 +21,7 @@ public class PasswordResetToken { // This for some reason doesn't throws an erro
     private String resetToken;
     private Date tokenExpirationDate;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "yuser_id")
     private User yuser;
 
