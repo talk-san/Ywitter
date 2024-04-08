@@ -51,8 +51,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(@Param("token") String token, @RequestBody Map<String, String> newPassword) {
-        return ResponseEntity.ok(service.changePassword(token, newPassword.get("newPassword"))); // @TODO make this a RequestBody properly
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> request) {
+        System.out.println(request);
+        return ResponseEntity.ok(service.changePassword(request.get("token"), request.get("newPassword"))); // @TODO make this a RequestBody properly
     }
 
     private String getURL(HttpServletRequest request) {

@@ -89,7 +89,8 @@ export default class LoginForm extends React.Component {
 
     onSubmitForgotPassword = (e) => {
         e.preventDefault();
-        const { email } = this.state;
+        const { email, buttonDisabled} = this.state;
+        if (buttonDisabled) return; // Prevent multiple clicks
         console.log("Email: " + email);
         request(
             "POST",
@@ -98,6 +99,9 @@ export default class LoginForm extends React.Component {
                 (response) => {
                     this.setState({ active: "passReset" })
                     console.log("Reset link should be sent")
+                    // setTimeout(() => {
+                    //     this.setState({ buttonDisabled: false }); // Make it so password-reset can only be sent once every 5 minutes
+                    // }, 5 * 60 * 1000); // 30 minutes
                 })
             .catch((resetError) => {
                 if (resetError.response) {

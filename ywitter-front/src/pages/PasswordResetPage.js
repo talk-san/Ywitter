@@ -24,8 +24,10 @@ const PasswordResetPage = () => {
             setErrorMessage('Please enter a new password.');
             return;
         }
+        console.log("Token: ", resetToken);
+        console.log("New Pass: ", newPassword);
 
-        request('POST', `http://localhost:8080/api/v1/auth/reset-password`, { token: resetToken, newPassword })
+        request('POST', `/api/v1/auth/change-password`, { token: resetToken, newPassword })
             .then(response => {
                 setResetSuccess(true);
             })
@@ -42,12 +44,12 @@ const PasswordResetPage = () => {
         <div className="container-fluid d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
             <div className="row text-center">
                 <div className="col mb-4">
-                    <img src={logoSrc} alt="Logo" style={{ maxWidth: '100px' }} />
+                    <img src={logoSrc} alt="Logo" style={{ maxWidth: '100px', marginBottom: '20px' }} />
                     {!resetSuccess && (
                         <div>
-                            <h3>Password Reset</h3>
+                            <h3 style={{ color: 'white' }}>Enter your new Password</h3>
                             <div className="form-group">
-                                <input type="password" className="form-control" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                                <input type="password" className="form-control" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} style={{ marginBottom: '10px' }} />
                             </div>
                             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                             <button className="btn btn-primary" onClick={handleResetPassword}>Reset Password</button>
@@ -63,6 +65,7 @@ const PasswordResetPage = () => {
             </div>
         </div>
     );
+
 }
 
 export default PasswordResetPage;

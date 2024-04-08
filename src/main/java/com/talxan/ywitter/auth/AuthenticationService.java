@@ -136,14 +136,17 @@ public class AuthenticationService {
     }
 
     public String changePassword(String token, String newPassword) {
+        System.out.println("Do we get here?");
         PasswordResetToken actualToken = passwordResetTokenRepositoryRepository.findByResetToken(token);
+        System.out.println("Actual Token:" + actualToken);
         if (actualToken == null || actualToken.getTokenExpirationDate().before(Calendar.getInstance().getTime())
                 || !actualToken.getResetToken().equals(token)) {
-            throw new TokenInvalidException();
+            throw new TokenInvalidException("Token not found or expired!");
         }
         User user = userRepository.findByResetToken(token).orElseThrow(UserNotFoundException::new);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        System.out.println("Password got changed");
         return "Password changed successfully";
     }
 
