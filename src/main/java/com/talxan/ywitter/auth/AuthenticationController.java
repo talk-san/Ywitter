@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -40,11 +41,19 @@ public class AuthenticationController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyEmail(@Param("code") String code) {
-        if (service.verifyEmail(code)) {
-            return ResponseEntity.ok("Email verified successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid verification code");
-        }
+        return ResponseEntity.ok(service.verifyEmail(code));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam("email") String email, HttpServletRequest httpServletRequest)
+            throws MessagingException, UnsupportedEncodingException {
+        return ResponseEntity.ok(service.resetPassword(email, getURL(httpServletRequest)));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> request) {
+        System.out.println(request);
+        return ResponseEntity.ok(service.changePassword(request.get("token"), request.get("newPassword"))); // @TODO make this a RequestBody properly
     }
 
     private String getURL(HttpServletRequest request) {
