@@ -1,9 +1,8 @@
 import LoginForm from '../components/LoginForm';
 import logoSrc from '../components/assets/icons/logo.png'
 import Footer from '../components/assets/footer/Footer';
-import {request, setAuthHeader} from "../axios_helper";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+
 
 
 export const LoginSignup = () => {

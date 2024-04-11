@@ -15,7 +15,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 
     @ExceptionHandler(EmailAlreadyTakenException.class)
     public ResponseEntity<String> handleEmailTaken(EmailAlreadyTakenException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -25,6 +25,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler  {
 
     @ExceptionHandler(SelfFollowException.class)
     public ResponseEntity<String> handleSelfFollow(SelfFollowException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(TokenInvalidException.class)
+    public ResponseEntity<String> handleInvalidToken(TokenInvalidException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
