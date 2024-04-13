@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {request} from '../../../axios_helper';
+import {request} from '../../axios_helper';
 import Post from './Post';
 import NewPost from './NewPost';
 import blankPfp from "../icons/blankPfp.png";

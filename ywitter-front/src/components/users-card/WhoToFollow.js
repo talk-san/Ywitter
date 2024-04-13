@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import UserCard from "./UserCard";
-import profilePic from '../users-card/aki.jpg';
-import {request} from "../../../axios_helper";
+import {request} from "../../axios_helper";
 
 const WhoToFollow = config => {
 

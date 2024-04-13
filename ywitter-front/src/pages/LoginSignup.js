@@ -1,6 +1,6 @@
 import LoginForm from '../components/LoginForm';
-import logoSrc from '../components/assets/icons/logo.png'
-import Footer from '../components/assets/footer/Footer';
+import logoSrc from '../components/icons/logo.png'
+import Footer from '../components/footer/Footer';
 import {useNavigate} from "react-router-dom";
 
 

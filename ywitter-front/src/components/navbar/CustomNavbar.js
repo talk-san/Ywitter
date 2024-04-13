@@ -1,5 +1,5 @@
 import React from 'react';
-import { setAuthHeader } from '../../../axios_helper';
+import { setAuthHeader } from '../../axios_helper';
 import { useNavigate } from 'react-router-dom';
 import logoSrc from '../icons/logo.png';
 import { Navbar, Nav } from 'react-bootstrap';

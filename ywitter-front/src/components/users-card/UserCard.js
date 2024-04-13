@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import blankPfp from '../icons/blankPfp.png'
-import {request} from "../../../axios_helper";
+import {request} from "../../axios_helper";
 
 
 const UserCard = ({user}) => {

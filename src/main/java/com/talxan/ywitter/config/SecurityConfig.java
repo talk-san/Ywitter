@@ -31,7 +31,7 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/api/v1/auth/**",
             "/api/v1/open/**",
-            "/api/v1/uploads/**"
+            "/**" //  Opening all endpoints
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
