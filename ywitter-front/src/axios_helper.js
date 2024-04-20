@@ -15,12 +15,25 @@ export const setAuthHeader = (token) => {
     }
 };
 
+export const setUserId = (id) => {
+    if (id !== null) {
+        window.localStorage.setItem("yuser-id", id);
+    } else {
+        window.localStorage.removeItem("yuser-id");
+    }
+};
+
+export const getYuserId = () => {
+    return window.localStorage.getItem("yuser-id");
+};
+
 export const isAuthenticated = () => {
     return !!getAuthToken(); 
   };
 
 export const request = (method, url, data) => {
     let headers = {};
+
     if (getAuthToken() !== null && getAuthToken !== "null") {
         headers = {"Authorization": `Bearer ${getAuthToken()}`};
     }

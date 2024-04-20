@@ -18,6 +18,7 @@ public class PostMapper {
                 .username(postUser.getUsername())
                 .firstName(postUser.getFirstName())
                 .postedAt(post.getPostedAt())
+                .userId(postUser.getYuserId())
                 .userPhoto(postUser.getPhotoUrl())
                 .parentPostId(Optional.ofNullable(post.getParentPost()).map(Post::getPostId).orElse(0))
                 .numOfComments(Optional.ofNullable(post.getComments()).map(List::size).orElse(0)) // TODO Implement this

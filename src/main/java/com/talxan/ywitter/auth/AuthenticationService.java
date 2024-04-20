@@ -50,16 +50,17 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
-                .enabled(false)
+                .enabled(true)
                 .verificationToken(generateToken())
                 .build();
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        sendVerificationMail(user, url);
+        //sendVerificationMail(user, url);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .id(user.getYuserId())
                 .build();
     }
 
@@ -78,6 +79,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .id(user.getYuserId())
                 .build();
     }
 

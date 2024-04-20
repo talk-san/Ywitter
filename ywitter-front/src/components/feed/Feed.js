@@ -15,6 +15,7 @@ export default class Feed extends React.Component {
         };
     };
 
+
     componentDidMount() {
         this.fetchData();
         this.fetchUser();
@@ -27,9 +28,13 @@ export default class Feed extends React.Component {
     };
 
     updateFeed = (newPost) => {
-        this.setState(prevState => ({
-            data: [newPost, ...prevState.data]
-        }));
+        if (newPost) {
+            this.setState(prevState => ({
+                data: [newPost, ...prevState.data]
+            }));
+        } else {
+            this.fetchData();
+        }
     }
 
     fetchData() {
@@ -116,11 +121,16 @@ export default class Feed extends React.Component {
                 {this.state.data.map((post, index) => (
                     <Post
                         key={index}
+                        postId={post.postId}
                         firstName={post.firstName}
                         username={post.username}
                         postedAt={post.postedAt}
                         text={post.text}
-                        userPhoto={post.userPhoto}
+                        userPhoto={post.userPhoto ? post.userPhoto: blankPfp}
+                        userId={post.userId}
+                        numOfLikes={post.numOfLikes}
+                        numOfComments={post.numOfComments}
+                        updateFeed={this.updateFeed}
                     />
                 ))}
             </div>

@@ -1,5 +1,6 @@
 package com.talxan.ywitter.post;
 
+import com.talxan.ywitter.yuser.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,8 @@ public class PostController {
     }
 
     @PostMapping("/like/{id}")
-    public ResponseEntity<String> like(@PathVariable("id") Integer postToLike) throws BadRequestException {
-        return ResponseEntity.ok(postService.like(postToLike));
+    public ResponseEntity<String> like(@PathVariable("id") Integer postId) throws BadRequestException {
+        return ResponseEntity.ok(postService.like(postId));
     }
 
     @PutMapping("/update/{id}")
@@ -55,4 +56,7 @@ public class PostController {
     public ResponseEntity<List<PostResponse>> getFeed() {
         return ResponseEntity.ok(postService.getFeed());
     }
+
+    @GetMapping("/getLikes/{id}")
+    public ResponseEntity<List<UserResponse>> getLikes(@PathVariable Integer id) {return ResponseEntity.ok(postService.getLikes(id));}
 }

@@ -1,9 +1,12 @@
 package com.talxan.ywitter.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.talxan.ywitter.like.Like;
 import com.talxan.ywitter.yuser.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +38,10 @@ public class Post {
     @Builder.Default
     private List<Post> comments = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "likedPost", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @Builder.Default
-    private List<User> likes = new ArrayList<>();
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Like> likes = new ArrayList<>();
 
     @Override
     public boolean equals(Object obj) {

@@ -47,4 +47,5 @@ public class UserController {
     @GetMapping("/getUser")
     public ResponseEntity<UserResponse> getUser() {return ResponseEntity.ok(userService.getUser());}
 
+
 }
