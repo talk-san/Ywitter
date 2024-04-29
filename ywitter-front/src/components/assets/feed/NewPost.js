@@ -10,7 +10,6 @@ const NewPost = ({ onPostSuccess }) => {
        
         request("POST", "/api/v1/post/create", { text })
             .then((response) => {
-                
                 onPostSuccess(response.data);
                 setText('');
             })

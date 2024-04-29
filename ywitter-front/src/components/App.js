@@ -2,7 +2,7 @@ import './App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {LoginSignup} from '../pages/LoginSignup';
 import { MainPage } from '../pages/MainPage';
-import {MessagingPage} from "../pages/MessagingPage";
+import MessagingPage from "../pages/MessagingPage";
 import VerificationPage from "../pages/VerificationPage";
 import PasswordResetPage from "../pages/PasswordResetPage";
 
