@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { request } from '../axios_helper';
-import logoSrc from '../components/assets/icons/logo.png';
+import logoSrc from '../components/icons/logo.png';
 
 const PasswordResetPage = () => {
     const location = useLocation();

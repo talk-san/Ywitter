@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { request } from '../axios_helper';
-import logoSrc from '../components/assets/icons/logo.png';
+import logoSrc from '../components/icons/logo.png';
 
 const VerificationPage = () => {
     const location = useLocation();

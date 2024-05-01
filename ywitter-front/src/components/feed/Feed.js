@@ -1,9 +1,11 @@
 import * as React from 'react';
 
-import {request} from '../../../axios_helper';
+import {request} from '../../axios_helper';
 import Post from './Post';
 import NewPost from './NewPost';
 import blankPfp from "../icons/blankPfp.png";
+import './Post.css'
+
 
 export default class Feed extends React.Component {
     constructor(props) {
@@ -15,37 +17,101 @@ export default class Feed extends React.Component {
         };
     };
 
+
     componentDidMount() {
         this.fetchData();
         this.fetchUser();
     }
 
     onFeedChange = (feedType) => {
+        console.log(feedType)
+        if (!isNaN(parseInt(feedType))) {
+            this.setState({ feed: parseInt(feedType) }, () => {
+                this.fetchPostAndReplies(parseInt(feedType));
+            });
+        } else {
+            this.setState({ feed: feedType }, () => {
+                this.fetchData();
+            });
+        }
+    };
+
+    fetchPostAndReplies(id) {
+        console.log(id)
+        const commentsUrl = `api/v1/post/getComments/${id}`;
+        const postUrl = `api/v1/post/get/${id}`;
+        // Fetch parent post
+        // Fetch parent post
+        request(
+            "GET",
+            postUrl,
+            {}
+        ).then(
+            (postResponse) => {
+                // Set parent post in state
+                const post = postResponse.data;
+
+                // Fetch comments after parent post is fetched
+                request(
+                    "GET",
+                    commentsUrl,
+                    {}
+                ).then(
+                    (commentsResponse) => {
+                        // Combine post and comments into a single array
+                        const combinedData = [post, ...commentsResponse.data];
+
+                        // Set combined data in state
+                        this.setState({
+                            data: combinedData
+                        });
+                    }
+                ).catch((commentsError) => {
+                    console.log("Error fetching comments", commentsError);
+                    this.setState({ error: "Error fetching comments" });
+                });
+            }
+        ).catch((postError) => {
+            console.log("Error fetching post", postError);
+            this.setState({ error: "Error fetching post" });
+        });
+
+
+    }
+
+    updateFeed = (newPost) => {
+        if (newPost) {
+            this.setState(prevState => ({
+                data: [newPost, ...prevState.data]
+            }));
+        } else {
+            this.fetchData();
+        }
+    }
+
+    refreshFeed = (feedType) => {
         this.setState({ feed: feedType }, () => {
             this.fetchData();
         });
-    };
-
-    updateFeed = (newPost) => {
-        this.setState(prevState => ({
-            data: [newPost, ...prevState.data]
-        }));
     }
+
 
     fetchData() {
         if (this.state.feed === 'forYou') {
             request(
                 "GET",
-                "/api/v1/post/all",
+                "/api/v1/post/all/parent",
                 {}).then(
                 (response) => {
                     this.setState({data: response.data})
+                    console.log(response.data)
                 })
                 .catch((error) => {
                     console.log("Error fetching posts")
                     this.setState({ error: "Error connecting to the database. Try logging in again" });
                 });
-        } else if (this.state.feed === 'following') {
+        }
+        else if (this.state.feed === 'following') {
             request(
                 "GET",
                 "/api/v1/post/feed",
@@ -113,15 +179,25 @@ export default class Feed extends React.Component {
                 </div>
                 <NewPost onPostSuccess={this.updateFeed}/>
                 {this.state.error && <div className="error" style={{color: 'white'}}>{this.state.error}</div>}
-                {this.state.data.map((post, index) => (
-                    <Post
-                        key={index}
-                        firstName={post.firstName}
-                        username={post.username}
-                        postedAt={post.postedAt}
-                        text={post.text}
-                        userPhoto={post.userPhoto}
-                    />
+                {this.state.data
+                    .map((post, index) => (
+                    <div key={index}>
+                        <Post
+                            postId={post.postId}
+                            firstName={post.firstName}
+                            username={post.username}
+                            postedAt={post.postedAt}
+                            text={post.text}
+                            userPhoto={post.userPhoto ? post.userPhoto : blankPfp}
+                            userId={post.userId}
+                            numOfLikes={post.numOfLikes}
+                            numOfComments={post.numOfComments}
+                            updateFeed={this.updateFeed}
+                            parentPostId={post.parentPostId}
+                            onFeedChange={this.onFeedChange}
+                            refreshFeed={this.refreshFeed}
+                        />
+                    </div>
                 ))}
             </div>
         );

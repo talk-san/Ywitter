@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {request, setAuthHeader} from "../axios_helper";
+import {request, setAuthHeader, setUserId} from "../axios_helper";
 
 export default class LoginForm extends React.Component {
     constructor(props) {
@@ -21,10 +21,12 @@ export default class LoginForm extends React.Component {
             "/api/v1/auth/authenticate", { email, password })
             .then((response) => {
                 setAuthHeader(response.data.token);
+                setUserId(response.data.id);
                 this.props.navigate("/feed");
             })
             .catch((error) => {
                 setAuthHeader(null);
+                setUserId(null);
                 if (error.response) {
                     //const errMessage = error.response.data;
                     const errCode = error.response.status;

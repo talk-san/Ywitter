@@ -1,11 +1,11 @@
-import Feed from '../components/assets/feed/Feed';
-import { Searchbar } from '../components/assets/searchbar/Searchbar';
+import Feed from '../components/feed/Feed';
+import { Searchbar } from '../components/searchbar/Searchbar';
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 
-import CustomNavbarComponent from '../components/assets/navbar/CustomNavbar';
-import WhoToFollow from "../components/assets/users-card/WhoToFollow";
+import CustomNavbarComponent from '../components/navbar/CustomNavbar';
+import WhoToFollow from "../components/users-card/WhoToFollow";
 
 export const MainPage = () => {
   return (

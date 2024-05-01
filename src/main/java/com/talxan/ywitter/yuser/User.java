@@ -1,9 +1,12 @@
 package com.talxan.ywitter.yuser;
 
 import com.talxan.ywitter.auth.PasswordResetToken;
+import com.talxan.ywitter.like.Like;
 import com.talxan.ywitter.post.Post;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -47,12 +50,10 @@ public class User implements UserDetails {
     @Builder.Default
     private List<User> following = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "post_likes",
-            joinColumns = @JoinColumn(name = "yuser_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    @OneToMany(mappedBy = "yuser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
-    private List<Post> likedPosts = new ArrayList<>();
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Like> likedPosts = new ArrayList<>();
 
     @Enumerated
     private Role role;

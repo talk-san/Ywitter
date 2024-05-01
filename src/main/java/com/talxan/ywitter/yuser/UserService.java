@@ -48,12 +48,12 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<UserResponse> getFollowing() {
         return getCurrentUser().getFollowing().stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<UserResponse> getWhoToFollow() {
         User currUser = getCurrentUser();
         List<User> allUsers = getAllUsers();
@@ -66,13 +66,13 @@ public class UserService {
         return collect;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<UserResponse> getFollowers() {
         User currUser = getCurrentUser();
         return userRepository.findFollowersByYuserId(currUser.getYuserId()).stream().map(UserMapper::mapToUserResponse).collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserResponse getUser() {
         return UserMapper.mapToUserResponse(getCurrentUser());
     }

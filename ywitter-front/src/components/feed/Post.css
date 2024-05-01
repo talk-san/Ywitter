@@ -1,0 +1,25 @@
+.post {
+    background-color: transparent;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.post:hover {
+    background-color: #222 !important;
+}
+
+.like-button:hover {
+    background-color: rgba(0, 0, 255, 10%) !important;
+}
+
+.comment-button:hover {
+    background-color: rgba(0, 255, 0, 10%) !important;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 0, 0, 10%) !important;
+}
+
+.grey-close-btn .close {
+    color: grey !important;
+}

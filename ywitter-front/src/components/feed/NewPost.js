@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { request } from '../../../axios_helper';
+import { request } from '../../axios_helper';
 
 
 const NewPost = ({ onPostSuccess }) => {

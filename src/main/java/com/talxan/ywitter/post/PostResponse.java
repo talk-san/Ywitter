@@ -17,6 +17,7 @@ public class PostResponse {
     private String firstName;
     private String text;
     private Date postedAt;
+    private Integer userId;
     private String userPhoto;
     private Integer parentPostId;
     private Integer numOfLikes;

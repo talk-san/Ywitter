@@ -1,8 +1,12 @@
 package com.talxan.ywitter.post;
 
 import com.talxan.ywitter.exceptions.PostNotFoundException;
+import com.talxan.ywitter.like.Like;
+import com.talxan.ywitter.like.LikeRepository;
 import com.talxan.ywitter.mappers.PostMapper;
+import com.talxan.ywitter.mappers.UserMapper;
 import com.talxan.ywitter.yuser.User;
+import com.talxan.ywitter.yuser.UserResponse;
 import com.talxan.ywitter.yuser.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -11,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.talxan.ywitter.mappers.PostMapper.mapToPostResponse;
@@ -21,8 +26,9 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
+    private final LikeRepository likeRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public PostResponse get(Integer id) {
         return mapToPostResponse(postRepository.findById(id).orElseThrow(PostNotFoundException::new));
     }
@@ -48,29 +54,32 @@ public class PostService {
                 .postedAt(new Date())
                 .parentPost(parentPost)
                 .build();
-        parentPost.getComments().add(post); // Also keeping comments separate to avoid database hits?
+        parentPost.getComments().add(post);
         postRepository.save(post);
         return PostMapper.mapToPostResponse(post);
     }
 
     @Transactional
-    public String like(Integer postToLike) throws BadRequestException {
-        var post = postRepository.findById(postToLike).orElseThrow(PostNotFoundException::new);
-        var user = userService.getCurrentUser();
+    public String like(Integer postId) throws BadRequestException {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post not found with id" + postId));
+        Optional<Like> likeOptional = likeRepository.findByLikedPost(post);
+        User user = userService.getCurrentUser();
 
-        List<User> likes = post.getLikes();
-        List<Post> likedPosts = user.getLikedPosts();
-
-        if (likes.contains(user)) {
-            likes.remove(user);
-            likedPosts.remove(post);
-            userService.update(user);
-            return user.getFirstName() + " unliked post with id" + post.getPostId();
+        if (likeOptional.isPresent()) {
+            Like like = likeOptional.get();
+            user.getLikedPosts().remove(like);
+            post.getLikes().remove(like);
+            likeRepository.deleteByPostIdAndUserId(post, user);
+            return "Like with id " + like.getLikeId() + "removed from post with id " + like.getLikedPost().getPostId();
         } else {
-            likes.add(user);
-            likedPosts.add(post);
-            userService.update(user);
-            return user.getFirstName() + " liked post with id" + post.getPostId();
+            Like newLike = Like.builder()
+                    .yuser(user)
+                    .likedPost(post)
+                    .build();
+            user.getLikedPosts().add(newLike);
+            post.getLikes().remove(newLike);
+            likeRepository.save(newLike);
+            return "Like with id" + newLike.getLikeId() + "added to post " + post.getPostId();
         }
 
     }
@@ -92,7 +101,6 @@ public class PostService {
         } else {
             postRepository.delete(postToDelete);
         }
-
     }
 
     @Transactional
@@ -101,10 +109,28 @@ public class PostService {
         return currentUser.getPosts().stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
     }
 
+    public List<PostResponse> getAllParentPosts() {
+        User currentUser = userService.getCurrentUser();
+        List<PostResponse> collect = currentUser.getPosts().stream()
+                .filter(p -> p.getParentPost() == null)
+                .map(PostMapper::mapToPostResponse).collect(Collectors.toList());
+        System.out.println(collect);
+        return collect;
+    }
+
     public List<PostResponse> getFeed() {
         List<Integer> ids = userService.getCurrentUser().getFollowing().stream().map(User::getYuserId).toList();
         return postRepository.findFirst10ByPostYuser_YuserIdInOrderByPostedAtDesc(ids).stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
 
     }
 
+    public List<UserResponse> getLikes(Integer id) {
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        return post.getLikes().stream().map(l -> UserMapper.mapToUserResponse(l.getYuser())).collect(Collectors.toList());
+    }
+
+    public List<PostResponse> getComments(Integer id) {
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        return post.getComments().stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
+    }
 }
