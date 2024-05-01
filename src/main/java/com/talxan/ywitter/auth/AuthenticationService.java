@@ -56,7 +56,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        //sendVerificationMail(user, url);
+        sendVerificationMail(user, url);
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import ProfilePic from '../components/assets/icons/PPP.png';
-import { request } from '../axios_helper';
 
 let stompClient = null;
 const MessagingPage = () => {
