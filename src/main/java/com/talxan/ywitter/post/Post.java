@@ -34,8 +34,9 @@ public class Post {
     @JsonIgnore
     private Post parentPost;
 
-    @Transient
+    @JsonIgnore
     @Builder.Default
+    @OneToMany(mappedBy = "parentPost", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Post> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "likedPost", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

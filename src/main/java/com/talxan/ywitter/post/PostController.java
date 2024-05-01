@@ -52,6 +52,12 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/all/parent")
+    public ResponseEntity<List<PostResponse>> getAllParentPosts() {
+        List<PostResponse> posts = postService.getAllParentPosts();
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/feed")
     public ResponseEntity<List<PostResponse>> getFeed() {
         return ResponseEntity.ok(postService.getFeed());
@@ -59,4 +65,7 @@ public class PostController {
 
     @GetMapping("/getLikes/{id}")
     public ResponseEntity<List<UserResponse>> getLikes(@PathVariable Integer id) {return ResponseEntity.ok(postService.getLikes(id));}
+
+    @GetMapping("/getComments/{id}")
+    public ResponseEntity<List<PostResponse>> getComments(@PathVariable Integer id) {return ResponseEntity.ok(postService.getComments(id));}
 }

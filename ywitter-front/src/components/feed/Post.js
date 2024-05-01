@@ -1,6 +1,7 @@
 import React from 'react';
 import './Feed.css'
 import {getYuserId, request} from "../../axios_helper";
+import {Button, Modal} from 'react-bootstrap';
 
 
 class Post extends React.Component {
@@ -9,12 +10,19 @@ class Post extends React.Component {
         super(props);
         this.state = {
             isLiked: false,
-            numOfLikes: this.props.numOfLikes
+            numOfLikes: this.props.numOfLikes,
+            numOfComments: this.props.numOfComments,
+            showModal: false,
+            text: ''
         };
     }
 
     componentDidMount() {
         this.fetchLikes();
+    }
+
+    handleChange = (e) => {
+        this.setState({text: e.target.value});
     }
 
     fetchLikes = () => {
@@ -25,13 +33,12 @@ class Post extends React.Component {
                 const likedUsers = response.data;
                 const currUserId = parseInt(getYuserId());
                 const isLiked = likedUsers.some(user => user.id === currUserId);
-                this.setState({ isLiked });
+                this.setState({isLiked});
             })
             .catch(error => {
                 console.error('Error fetching likes for post:', error);
             });
     }
-
 
 
     handleLikeSubmit = (event) => {
@@ -50,7 +57,7 @@ class Post extends React.Component {
                     console.log(response.data);
                 })
                 .catch(error => {
-                    console.error('Error deleting post:', error);
+                    console.error('Error liking post:', error);
                 });
 
         });
@@ -60,20 +67,48 @@ class Post extends React.Component {
 
     // Handler method for handling comment submission
     handleCommentSubmit = (event) => {
-        //event.preventDefault();
-        // Logic for handling comment submission
-        console.log('Comment submitted');
+        event.preventDefault()
+        this.setState({showModal: true});
+        console.log(this.state.showModal)
+    };
+
+    handleCloseModal = () => {
+        this.setState({showModal: false});
+        console.log(this.state.showModal)
+    };
+
+    // This is for posting a comment
+    handleSubmitCommentPost = (event) => {
+        event.preventDefault()
+        console.log("Comment submitted")
+
+        const url = `api/v1/post/comment/${this.props.postId}`;
+
+
+        this.setState(prevState => ({
+            numOfComments: prevState.numOfComments + 1
+        }), () => {
+            request('POST', url, {text: this.state.text})
+                .then(response => {
+                    console.log(response.data);
+                    this.setState({showModal: false});
+                    this.props.updateFeed();
+                })
+                .catch(error => {
+                    console.error('Error commenting post:', error);
+                });
+        });
+
     }
 
     handleDeleteSubmit = (event) => {
         event.preventDefault();
-
         const url = `api/v1/post/delete/${this.props.postId}`;
 
         request('DELETE', url)
             .then(response => {
                 console.log(response.data);
-                this.props.updateFeed();
+                this.props.refreshFeed('forYou')
             })
             .catch(error => {
                 console.error('Error deleting post:', error);
@@ -100,13 +135,18 @@ class Post extends React.Component {
         }
     }
 
+    handleClick(postId) {
+        this.props.onFeedChange(postId)
+    }
+
     render() {
         const formattedPostedAt = this.formatPostedAt(this.props.postedAt);
         const isUserPost = String(this.props.userId) === getYuserId();
 
         return (
-            <div className="card bg-black text-white" style={{ border: '1px solid #333', borderRadius: '1px', padding: '10px', position: 'relative' }}>
-                <div className="card-body">
+            <div className="card bg-black text-white post" onClick={() => this.handleClick(this.props.postId)}
+                 style={{border: '1px solid #333', borderRadius: '1px', padding: '10px', position: 'relative'}}>
+                <div className="card-body" onClick={() => this.handleClick(this.props.postId)}>
                     <div className="d-flex align-items-center">
                         <div className="d-flex align-items-center">
                             <img src={this.props.userPhoto} className="mb-2" alt="Profile"
@@ -125,35 +165,91 @@ class Post extends React.Component {
                     </div>
                     <p className="card-text mt-3" style={{marginTop: '5px'}}>{this.props.text}</p>
                     <div className="me-2">
-                        <form onSubmit={this.handleLikeSubmit} className="me-lg-2"
+                        <form className="me-lg-2"
                               style={{display: 'inline-block', marginRight: '5px'}}>
-                            <button type="submit" className="btn btn-sm hover rounded-pill">
+                            <button type="submit" className="btn btn-sm hover like-button rounded-pill"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent event propagation
+                                        this.handleLikeSubmit(e);
+                                    }}>
                                 <i className={`bi bi-heart${this.state.isLiked ? '-fill' : ''} text-white`}></i>
                                 <span style={{color: 'white', marginLeft: '5px'}}>{this.state.numOfLikes}</span>
                             </button>
-
                         </form>
-                        <form onSubmit={this.handleCommentSubmit} className="me-lg-2"
+                        <form className="me-lg-2"
                               style={{display: 'inline-block', marginRight: '5px'}}>
-                            <button type="submit" className="btn btn-sm hover rounded-pill">
+                            <button type="submit" className="btn btn-sm hover comment-button rounded-pill"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent event propagation
+                                        this.handleCommentSubmit(e);
+                                    }}>
                                 <i className="bi bi-chat text-white"></i>
                                 <span style={{color: 'white', marginLeft: '5px'}}>{this.props.numOfComments}</span>
                             </button>
                         </form>
+
                         {isUserPost &&
-                            <form onSubmit={this.handleDeleteSubmit} style={{display: 'inline-block'}}>
-                                <button type="submit" className="btn btn-sm hover rounded-pill">
+                            <form style={{display: 'inline-block'}}>
+                                <button type="submit" className="btn btn-sm hover delete-button rounded-pill"
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent event propagation
+                                            this.handleDeleteSubmit(e);
+                                        }}>
                                     <i className="bi bi-trash text-white"></i>
                                 </button>
                             </form>
                         }
+
                     </div>
-
-
                 </div>
+
+                <Modal
+                    show={this.state.showModal}
+                    onHide={this.handleCloseModal}
+                    style={{backgroundColor: 'rgba(128, 128, 128, 0.2)'}}>
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <Modal.Header closeButton
+                                      style={{backgroundColor: 'black', border: 'none', borderBottom: '1px solid #333'}}
+                        >
+                            <Modal.Title style={{color: 'white'}}>Replying to {this.props.firstName}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body style={{backgroundColor: 'black', color: 'white'}}>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateRows: 'auto 1fr auto',
+                                gap: '1rem',
+                                borderRadius: '15px',
+                                padding: '20px'
+                            }}>
+                        <textarea
+                            value={this.state.text}
+                            onChange={this.handleChange}
+                            placeholder="Reply to the post"
+                            rows={4}
+                            cols={30}
+                            required
+                            className="form-control"
+                            style={{
+                                backgroundColor: 'black',
+                                color: 'white',
+                                resize: 'none',
+                                border: '1px solid #333',
+                            }}
+                        ></textarea>
+                                <form onSubmit={this.handleSubmitCommentPost}>
+                                    <button type="submit" className="btn btn-primary rounded-pill"
+                                            style={{justifySelf: 'end'}}>Post
+                                    </button>
+                                </form>
+                            </div>
+                        </Modal.Body>
+                    </div>
+                </Modal>
             </div>
         );
     }
+
+
 }
 
 export default Post;

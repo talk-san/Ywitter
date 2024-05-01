@@ -54,7 +54,7 @@ public class PostService {
                 .postedAt(new Date())
                 .parentPost(parentPost)
                 .build();
-        parentPost.getComments().add(post); // Also keeping comments separate to avoid database hits?
+        parentPost.getComments().add(post);
         postRepository.save(post);
         return PostMapper.mapToPostResponse(post);
     }
@@ -109,6 +109,15 @@ public class PostService {
         return currentUser.getPosts().stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
     }
 
+    public List<PostResponse> getAllParentPosts() {
+        User currentUser = userService.getCurrentUser();
+        List<PostResponse> collect = currentUser.getPosts().stream()
+                .filter(p -> p.getParentPost() == null)
+                .map(PostMapper::mapToPostResponse).collect(Collectors.toList());
+        System.out.println(collect);
+        return collect;
+    }
+
     public List<PostResponse> getFeed() {
         List<Integer> ids = userService.getCurrentUser().getFollowing().stream().map(User::getYuserId).toList();
         return postRepository.findFirst10ByPostYuser_YuserIdInOrderByPostedAtDesc(ids).stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
@@ -118,5 +127,10 @@ public class PostService {
     public List<UserResponse> getLikes(Integer id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
         return post.getLikes().stream().map(l -> UserMapper.mapToUserResponse(l.getYuser())).collect(Collectors.toList());
+    }
+
+    public List<PostResponse> getComments(Integer id) {
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        return post.getComments().stream().map(PostMapper::mapToPostResponse).collect(Collectors.toList());
     }
 }
