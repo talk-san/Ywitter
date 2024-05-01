@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import {over} from 'stompjs';
+import React, { useEffect, useState } from 'react';
+import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
-import ProfilePic from '../components/assets/icons/PPP.png'
-import {request} from "../axios_helper";
+import ProfilePic from '../components/assets/icons/PPP.png';
+import { request } from '../axios_helper';
 
 let stompClient = null;
 const MessagingPage = () => {
     const [privateChats, setPrivateChats] = useState(new Map());
     const [publicChats, setPublicChats] = useState([]);
-    const [tab,setTab] =useState("CHATROOM");
+    const [tab,setTab] = useState("CHATROOM");
     const [userData, setUserData] = useState({
         username: '',
         receivername: '',
@@ -125,48 +125,28 @@ const MessagingPage = () => {
                 <div className="chat-box">
                     <div className="member-list">
                         <ul>
-                            <li onClick={()=>{setTab("CHATROOM")}} className={`member ${tab==="CHATROOM" && "active"}`}>Chatroom</li>
                             {[...privateChats.keys()].map((name,index)=>(
                                 <li onClick={()=>{setTab(name)}} className={`member ${tab===name && "active"}`} key={index}>{name}</li>
                             ))}
                         </ul>
                     </div>
-                    {tab==="CHATROOM" && <div className="chat-content">
-                        <ul className="chat-messages">
-                            {publicChats.map((chat,index)=>(
-                                <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
-                                    {chat.senderName !== userData.username &&
-                                        <div className="avatar.self" style={{backgroundImage: `url(${ProfilePic})`}}></div>}
-                                    <div className="message-data">{chat.message}</div>
-                                    {chat.senderName === userData.username &&
-                                        <div className="avatar.self" style={{backgroundImage: `url(${ProfilePic})`}}></div>}
-                                </li>
-                            ))}
-                        </ul>
 
-                        <div className="send-message">
-                            <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} />
-                            <button type="button" className="send-button" onClick={sendValue}>send</button>
-                        </div>
-                    </div>}
-                    {tab!=="CHATROOM" && <div className="chat-content">
+                    {<div className="chat-content">
                         <ul className="chat-messages">
-                            {[...privateChats.get(tab)].map((chat,index)=>(
+                            {[...(privateChats.get(tab) || [])].map((chat,index)=>(
                                 <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
                                     {chat.senderName !== userData.username &&
                                         <div className="avatar" style={{backgroundImage: `url(${ProfilePic})`}}></div>
-                                        //WHEN ADDING avatar.self it doesnt show the avatar idk why
                                     }
                                     <div className="message-data">{chat.message}</div>
                                     {chat.senderName === userData.username &&
-                                        //WHEN ADDING avatar.self it doesnt show the avatar idk why
                                         <div className="avatar" style={{backgroundImage: `url(${ProfilePic})`}}></div>}
                                 </li>
                             ))}
                         </ul>
 
                         <div className="send-message">
-                            <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} />
+                            <input type="text" className="input-message" placeholder="Message..." value={userData.message} onChange={handleMessage} />
                             <button type="button" className="send-button" onClick={sendPrivateValue}>send</button>
                         </div>
                     </div>}
@@ -190,4 +170,4 @@ const MessagingPage = () => {
 
 }
 
-export default MessagingPage
+export default MessagingPage;
