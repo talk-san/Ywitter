@@ -4,7 +4,6 @@ import com.talxan.ywitter.exceptions.SelfFollowException;
 import com.talxan.ywitter.exceptions.UserNotFoundException;
 import com.talxan.ywitter.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,9 +112,26 @@ public class UserService {
         return (com.talxan.ywitter.yuser.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public void saveUser(User user) {
+        user.setStatus(Status.ONLINE);
+        userRepository.save(user);
+    }
+
+    public void disconnect(User user) {
+        var storedUser = userRepository.findById(user.getYuserId())
+                .orElse(null);
+        if (storedUser != null) {
+            user.setStatus(Status.OFFLINE);
+            userRepository.save(user);
+        }
+    }
+
+    public List<User> findUsers() {
+        return userRepository.findAllByStatus(Status.ONLINE);
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
 
 }

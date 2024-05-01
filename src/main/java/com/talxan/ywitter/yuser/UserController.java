@@ -2,6 +2,9 @@ package com.talxan.ywitter.yuser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,5 +49,24 @@ public class UserController {
 
     @GetMapping("/getUser")
     public ResponseEntity<UserResponse> getUser() {return ResponseEntity.ok(userService.getUser());}
+
+    @MessageMapping("/user.addUser")
+    @SendTo("/user/topic")
+    public User addUser(@Payload User user) {
+        userService.saveUser(user);
+        return user;
+    }
+
+    @MessageMapping("/user.disconnectUser")
+    @SendTo("/user/topic")
+    public User disconnect(@Payload User user) {
+        userService.disconnect(user);
+        return user;
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> findConnectedUsers() {
+        return ResponseEntity.ok(userService.findUsers());
+    }
 
 }

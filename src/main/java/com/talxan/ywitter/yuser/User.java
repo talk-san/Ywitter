@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String photoUrl;
+    private Status status;
 
     @Column(name = "enabled")
     private Boolean enabled;
